@@ -1,0 +1,150 @@
+body {
+  
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+.content{
+  overflow: hidden;
+}
+
+.title{
+	margin: .25em 0px;
+  font-size: 1.5em;
+}
+
+/* when hiding the picture */
+.dislike.ng-hide-add         { animation:0.5s lightSpeedLeft ease; }
+
+.like.ng-hide-add         { animation:0.5s lightSpeedRight ease; }
+
+/* when showing the picture */
+.ng-hide-remove      { animation:0.5s fadeIn ease; }
+
+/* ANIMATIONS (FROM ANIMATE.CSS) ======================== */
+/* flip in */
+@-webkit-keyframes fadeIn {
+  0% {
+    transition-timing-function: ease-in;
+    opacity: 0;
+  }
+
+  40% {
+    transition-timing-function: ease-in;
+    transition-timing-function: ease-in;
+    opacity: 0.4;
+  }
+
+  60% {
+    opacity: 0.6;
+  }
+
+  80% {
+    opacity: 1;
+  }
+
+  100% {
+    
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    transition-timing-function: ease-in;
+    opacity: 0;
+  }
+
+  40% {
+    transition-timing-function: ease-in;
+    transition-timing-function: ease-in;
+    opacity: 0.4;
+  }
+
+  60% {
+    opacity: 0.6;
+  }
+
+  80% {
+    opacity: 1;
+  }
+
+  100% {
+    
+  }
+}
+
+@-webkit-keyframes lightSpeedLeft {
+	0% {
+	    opacity: 1;
+	    -webkit-transform: translateX(0);
+	    transform: translateX(0);
+	  }
+	  100% {
+	    opacity: 0;
+	    -webkit-transform: translateX(-100%) skewX(30deg);
+	    transform: translateX(-100%) skewX(30deg);
+	  }
+}
+
+/* light speed right */
+@-webkit-keyframes lightSpeedRight {
+  0% {
+    opacity: 1;
+    -webkit-transform: translateX(0);
+    transform: translateX(0);
+  }
+
+  100% {
+  	opacity: 0;
+    -webkit-transform: translateX(100%) skewX(30deg);
+    -ms-transform: translateX(100%) skewX(30deg);
+    transform: translateX(100%) skewX(30deg);
+  }
+}
+
+/* light speed left */
+@keyframes lightSpeedLeft {
+	0% {
+	    opacity: 1;
+	    -webkit-transform: translateX(0);
+	    transform: translateX(0);
+	  }
+	  100% {
+	    opacity: 0;
+	    -webkit-transform: translateX(-100%) skewX(30deg);
+	    transform: translateX(-100%) skewX(30deg);
+	  }
+}
+
+/* light speed right */
+@keyframes lightSpeedRight {
+  0% {
+    opacity: 1;
+    -webkit-transform: translateX(0);
+    transform: translateX(0);
+  }
+
+  100% {
+  	opacity: 0;
+    -webkit-transform: translateX(100%) skewX(30deg);
+    -ms-transform: translateX(100%) skewX(30deg);
+    transform: translateX(100%) skewX(30deg);
+  }
+}
+
+
+a {
+  color: #00B7FF;
+}
+
+.displayName{
+  margin: .5em 0px;
+}
+
+.cardContent{
+  padding: .75em;
+}
+
+.spanAge{
+	font-size: .7em;
+	font-style: italic;
+}

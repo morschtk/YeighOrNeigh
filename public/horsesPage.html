@@ -1,0 +1,20 @@
+<div id="container">
+  <md-content class="content md-padding">
+
+    <md-card ng-class="cssCard" ng-show="card">
+      <a href="#/"><img ng-src="{{horse.imagePath}}" class="md-card-image" alt="horse"></a>
+      <md-card-content>
+        <h2 class="md-headline">{{horse.name}}<span class="spanAge"> is {{horse.age}} years old.</span></h2>
+        <div ng-show="details">
+        <p>{{horse.distance}} miles away!</p>
+        <p>{{horse.bio}}</p>
+        </div>
+      </md-card-content>
+      <div class="md-actions" layout="row" layout-align="space-around center">
+        <md-button ng-click="cssCard='dislike'; dislike(horse);">UGLY..</md-button>
+        <md-button ng-click="cssCard='like'; like(horse);">SHIT YEAH!</md-button>
+      </div>
+    </md-card>
+
+  </md-content>
+</div>
