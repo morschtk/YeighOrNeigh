@@ -1,8 +1,8 @@
 <div id="container">
-  <md-content class="content md-padding">
+  <md-content ng-if="userAuthenticated()" class="content md-padding">
     
     <md-card ng-class="cssCard" ng-show="card">
-      <img ng-src="{{horse.imagePath}}" ng-click="details = !details;" class="md-card-image" alt="horse">
+      <img ng-src="{{horse.imagePath}}" ng-click="showDetails()" class="md-card-image" alt="horse">
       <md-card-content class="cardContent">
         <h2 class="displayName md-headline">{{horse.name}}<span class="spanAge"> is {{horse.age}} years old.</span></h2>
         <div ng-show="details">
@@ -15,6 +15,7 @@
         <md-button ng-click="cssCard='like'; like(horse);">SHIT YEAH!</md-button>
       </div>
     </md-card>
-
+    <md-button ng-click="signout()" class="md-raised md-warn">Sign out</md-button>
   </md-content>
+
 </div>

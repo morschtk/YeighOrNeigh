@@ -148,3 +148,7 @@ a {
 	font-size: .7em;
 	font-style: italic;
 }
+
+.regForm md-input-container:not(.md-input-invalid) > label{
+  color: #656565; 
+}

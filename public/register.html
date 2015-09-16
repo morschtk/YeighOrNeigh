@@ -1,0 +1,49 @@
+<div id="container">
+  <md-content ng-if="!userAuthenticated()" class="content md-padding">  
+    <md-card>
+      <md-card-content>
+        <form ng-submit="register()">
+          <span>{{error_message}}</span>
+          <div class="regForm" layout="column">
+            <h2 class="md-title" style="color: #3f51b5" layout layout-align="center">Register</h2>
+            <md-input-container class="md-icon-float">
+              <label name="name">Username</label>
+              <md-icon style="fill: #3f51b5" md-svg-src="images/icons/account.svg"></md-icon>
+              <input ng-model="regHorse.username">
+            </md-input-container>
+            <md-input-container class="md-icon-float">
+              <label style="fill: #3f51b5">Password</label>
+              <md-icon style="fill: #3f51b5" md-svg-src="images/icons/key.svg"></md-icon>
+              <input ng-model="regHorse.password" type="password">
+            </md-input-container>
+          </div>
+          <md-button type="submit" class="md-raised md-primary">Register</md-button>
+        </form>
+      </md-card-content>
+    </md-card>
+  </md-content>
+
+  <md-content ng-if="!userAuthenticated()" class="content md-padding">  
+    <md-card>
+      <md-card-content>
+        <form ng-submit="logIn()">
+          <span>{{error_message}}</span>
+          <div class="logForm" layout="column">
+            <h2 class="md-title" style="color: #3f51b5" layout layout-align="center">Log In</h2>
+            <md-input-container class="md-icon-float">
+              <label name="name">Username</label>
+              <md-icon style="fill: #3f51b5" md-svg-src="images/icons/account.svg"></md-icon>
+              <input ng-model="logHorse.username">
+            </md-input-container>
+            <md-input-container class="md-icon-float">
+              <label style="fill: #3f51b5">Password</label>
+              <md-icon style="fill: #3f51b5" md-svg-src="images/icons/key.svg"></md-icon>
+              <input ng-model="logHorse.password" type="password">
+            </md-input-container>
+          </div>
+          <md-button type="submit" class="md-raised md-primary">Log In</md-button>
+        </form>
+      </md-card-content>
+    </md-card>
+  </md-content>
+</div>
