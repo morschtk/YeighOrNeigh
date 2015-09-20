@@ -9,12 +9,18 @@
             <md-input-container class="md-icon-float">
               <label name="name">Username</label>
               <md-icon style="fill: #3f51b5" md-svg-src="images/icons/account.svg"></md-icon>
-              <input ng-model="regHorse.username">
+              <input ng-model="regHorse.username" type="text" required>
             </md-input-container>
             <md-input-container class="md-icon-float">
               <label style="fill: #3f51b5">Password</label>
               <md-icon style="fill: #3f51b5" md-svg-src="images/icons/key.svg"></md-icon>
-              <input ng-model="regHorse.password" type="password">
+              <input ng-model="regHorse.password" type="password" required>
+            </md-input-container>
+            <span style="color: #f00">{{error_birthday}}</span>
+            <md-input-container class="md-icon-float">
+              <label style="fill: #3f51b5">Birth Date</label>
+              <md-icon style="fill: #3f51b5" md-svg-src="images/icons/cake.svg"></md-icon>
+              <input ng-model="regHorse.birthday" type="date" required>
             </md-input-container>
           </div>
           <md-button type="submit" class="md-raised md-primary">Register</md-button>

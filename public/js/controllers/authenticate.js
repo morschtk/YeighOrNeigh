@@ -2,28 +2,58 @@ var appAuth = angular.module("appAuth", ['ngMaterial']);
 
 appAuth.controller('authController', function($scope, $http, $location, currentUserService){
 
-	$scope.regHorse = {username: '', password: '', lat: '', lon: ''};
+	$scope.regHorse = {username: '', password: '', lat: '', lon: '', birthday: ''};
 	$scope.logHorse = {username: '', password: '', lat: '', lon: ''};
 	$scope.userAuthenticated = currentUserService.getAuth;
+	var aDate = new Date();
+	var aDate = aDate.getFullYear();
+	var aYear;
+	var yearArr = [];
+	$scope.error_birthday = "";
 
 	$scope.register = function(){
 	  	$scope.regHorse.lat = myLat;
 	  	$scope.regHorse.lon = myLon;
-	  	$http.post('/signup', $scope.regHorse).success(function(data){
-			if(data.state == 'success'){
-				currentUserService.setAuth(true);
-				$scope.userAuthenticated = currentUserService.getAuth;
-				currentUserService.setUser(data.user.username);
-				$scope.scope_current_user = data.user.username;
-				$scope.regHorse = {username: '', password: '', lat: '', lon: ''};
-				$location.path('/');
-			}
-			else{
-				$scope.error_message = data.message;
-			}
-		}).error(function(data, status){
-			$scope.error_message = "Please register with a different username.";
-		});
+	  	var birth = $scope.regHorse.birthday
+	  	 
+	  	    var today = new Date();
+	  	    var nowyear = today.getFullYear();
+	  	    var nowmonth = today.getMonth();
+	  	    var nowday = today.getDate();
+	  	 
+	  	    var birthyear = birth.getFullYear();
+	  	    var birthmonth = birth.getMonth();
+	  	    var birthday = birth.getDate();
+	  	 
+	  	    var age = nowyear - birthyear;
+	  	    var age_month = nowmonth - birthmonth;
+	  	    var age_day = nowday - birthday;
+	  	    
+	  	    if(age_month < 0 || (age_month == 0 && age_day <0)) {
+	  	            age = parseInt(age) -1;
+	  	        }
+	  	    
+	  	    if (age < 18) {
+	  	    	$scope.error_birthday = "You must be over 18 to use this app.";
+	  	    }
+	  	    else {
+  	          	$http.post('/signup', $scope.regHorse).success(function(data){
+  	        		if(data.state == 'success'){
+  	        			currentUserService.setAuth(true);
+  	        			$scope.userAuthenticated = currentUserService.getAuth;
+  	        			currentUserService.setUser(data.user.username);
+  	        			$scope.scope_current_user = data.user.username;
+  	        			$scope.regHorse = {username: '', password: '', lat: '', lon: '', birthday: ''};
+  	        			$location.path('/');
+  	        		}
+  	        		else{
+  	        			$scope.error_message = data.message;
+  	        		}
+  	        	}).error(function(data, status){
+  	        		$scope.error_message = "Please register with a different username.";
+  	        	});
+	  	    }
+	  	
   	};
 
   	$scope.logIn = function(){
@@ -46,6 +76,7 @@ appAuth.controller('authController', function($scope, $http, $location, currentU
 		});
   	};
 
+//update lat and lon when log in
 	$scope.checkLocation = function(){ 
 		//check for geolocation support
 		if (navigator.geolocation) {

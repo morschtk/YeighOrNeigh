@@ -13,9 +13,9 @@ var connectMongo = require("connect-mongo");
 
 var MongoStore = connectMongo(session);
 // The first set of xxxx's is your db username, second is your db password, and third is the name of your collection
- mongoose.connect('mongodb://xxxx:xxxx@ds042698.mongolab.com:42698/xxxxx');
+ mongoose.connect('mongodb://xxxx:xxxx@ds042698.mongolab.com:42698/xxxx');
 
-// var routes = require('./routes/index');
+var api = require('./routes/api');
 var authenticate = require('./routes/authenticate')(passport);
 
 var app = express();
@@ -48,7 +48,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(passport.initialize());
 app.use(passport.session());
 
-// app.use('/', routes);
+app.use('/api', api);
 app.use('/', authenticate);
 
 //// Initialize Passport

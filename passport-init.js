@@ -39,11 +39,29 @@ module.exports = function(passport){
 						console.log('Invalid Password');
 						return done(null, false); // redirect back to login page
 					}
-					// Horse and password both match, return user from done method
-					// which will be treated like success
-					return done(null, user);
-				}
-			);
+					// Horse and password both match, 
+					// Update the Horse's last logged in time, latitude, and longitude
+					Horse.findOneAndUpdate({
+						'_id': user._id
+					},{
+						$set: {
+							last_logged: Date.now(),
+							latitude: req.body.lat,
+							longitude: req.body.lon
+						}
+					},{
+						new: true
+					},
+						function(err, doc){
+							if(err){
+								console.log("here " + err);
+								return done(err);
+							}
+							// return user from done method
+							// which will be treated like success
+							return done(null, doc);
+						});
+				});
 		}
 	));
 
@@ -71,6 +89,7 @@ module.exports = function(passport){
 					// set the user's local credentials
 					newHorse.username = username;
 					newHorse.password = createHash(password);
+					newHorse.birthday = req.body.birthday;
 					newHorse.settings.desired_distance = 25;
 					newHorse.latitude = req.body.lat;
 					newHorse.longitude = req.body.lon;

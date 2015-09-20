@@ -19,3 +19,10 @@ appServices.factory('currentUserService', function() {
         
     };
 });
+
+appServices.factory('horseService',['$resource', function($resource){
+    return $resource('/api/horses/:id', null,
+        {
+            'update': {method:'put'}
+    });
+}]);

@@ -9,15 +9,22 @@ var horseSchema = new Schema({
 	latitude: String,
 	longitude: String,
 	bio: String,
-	pictures: {type: [String], validate: [arrayLimit, '{PATH} exceeds the limit of 6']},
-	age: Number,
+	pictures: {
+		picture_one: {type: String, default: 'images/default.jpg'},
+		picture_two: {type: String, default: null},
+		picture_three: {type: String, default: null},
+		picture_four: {type: String, default: null},
+		picture_five: {type: String, default: null},
+		picture_six: {type: String, default: null}
+	},
+	birthday: Date,
 	likes: [{type: Schema.Types.ObjectId, ref: 'Horse', unique: true}],
 	dislike: [{type: Schema.Types.ObjectId, ref: 'Horse', unique: true}],
 	settings: {
-		desired_distance: Number,
-		desired_gender: String,
-		desired_age_min: Number,
-		desired_age_max: Number,
+		desired_distance: {type: Number, default: 25},
+		desired_gender: {type: String, default: 'both'},
+		desired_age_min: {type: Number, default: 18},
+		desired_age_max: {type: Number, default: 25}
 	}
 });
 
