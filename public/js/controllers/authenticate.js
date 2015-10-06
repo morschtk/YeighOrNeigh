@@ -1,6 +1,6 @@
-var appAuth = angular.module("appAuth", ['ngMaterial']);
+var appAuth = angular.module("appAuth", ['ngMaterial', 'ngStorage']);
 
-appAuth.controller('authController', function($scope, $http, $location, currentUserService){
+appAuth.controller('authController', function($scope, $http, $location, currentUserService, $localStorage){
 
 	$scope.regHorse = {username: '', password: '', lat: '', lon: '', birthday: ''};
 	$scope.logHorse = {username: '', password: '', lat: '', lon: ''};
@@ -12,8 +12,10 @@ appAuth.controller('authController', function($scope, $http, $location, currentU
 	$scope.error_birthday = "";
 
 	$scope.register = function(){
-	  	$scope.regHorse.lat = myLat;
-	  	$scope.regHorse.lon = myLon;
+	  	$scope.regHorse.lat = $scope.myLat;
+	  	$scope.regHorse.lon = $scope.myLon;
+
+
 	  	var birth = $scope.regHorse.birthday
 	  	 
 	  	    var today = new Date();
@@ -41,8 +43,10 @@ appAuth.controller('authController', function($scope, $http, $location, currentU
   	        		if(data.state == 'success'){
   	        			currentUserService.setAuth(true);
   	        			$scope.userAuthenticated = currentUserService.getAuth;
-  	        			currentUserService.setUser(data.user.username);
-  	        			$scope.scope_current_user = data.user.username;
+  	        			if(!$localStorage.currUser){
+							$localStorage.currUser = data.user._id;
+						}
+  	        			$scope.scope_current_user = data.user._id;
   	        			$scope.regHorse = {username: '', password: '', lat: '', lon: '', birthday: ''};
   	        			$location.path('/');
   	        		}
@@ -57,14 +61,14 @@ appAuth.controller('authController', function($scope, $http, $location, currentU
   	};
 
   	$scope.logIn = function(){
-	  	$scope.logHorse.lat = myLat;
-	  	$scope.logHorse.lon = myLon;
+	  	$scope.logHorse.lat = $scope.myLat;
+	  	$scope.logHorse.lon = $scope.myLon;
 	  	$http.post('/login', $scope.logHorse).success(function(data){
 			if(data.state == 'success'){
 				currentUserService.setAuth(true);
 				$scope.userAuthenticated = currentUserService.getAuth;
-				currentUserService.setUser(data.user.username);
-				$scope.scope_current_user = data.user.username;
+				$localStorage.currUser = data.user._id;
+				$scope.scope_current_user = data.user._id;
 				$scope.logHorse = {username: '', password: '', lat: '', lon: ''};
 				$location.path('/');
 			}
@@ -76,7 +80,7 @@ appAuth.controller('authController', function($scope, $http, $location, currentU
 		});
   	};
 
-//update lat and lon when log in
+	//update lat and lon when log in
 	$scope.checkLocation = function(){ 
 		//check for geolocation support
 		if (navigator.geolocation) {
@@ -85,10 +89,14 @@ appAuth.controller('authController', function($scope, $http, $location, currentU
 				startPos = position;
 				//radius = 10;
 
-				myLat = startPos.coords.latitude;
-				myLon = startPos.coords.longitude;
+				$scope.myLat = startPos.coords.latitude;
+				$scope.myLon = startPos.coords.longitude;
 
-				// getLatLng();
+				currentUserService.setLon($scope.myLon);
+				currentUserService.setLat($scope.myLat);
+
+				// $localStorage.currLon = 34.1000;
+				// $localStorage.currLat = 118.3333;
 
 			}, function(error){
 				alert("Error occurred. Error.code: " + error.code);
@@ -101,13 +109,13 @@ appAuth.controller('authController', function($scope, $http, $location, currentU
 		} else{
 			console.log('geolocation is not supported for this Browser/OS version yet.');
 		}
-	}	
+	};
 
 	$scope.signout = function(){
 		$http.get('/signout');
 		currentUserService.setAuth(false);
-		// $scope.userAuthenticated = false;
-		currentUserService.setUser("");
+		$scope.userAuthenticated = false;
+		delete $localStorage.currUser;
 		$scope.scope_current_user = "";
 		$scope.error_message = "";
 		$location.path('/register');
@@ -120,8 +128,8 @@ appAuth.controller('authController', function($scope, $http, $location, currentU
 			if(data.state == 'success' && data.user){
 				currentUserService.setAuth(true);
 				$scope.userAuthenticated = currentUserService.getAuth;
-				$scope.scope_current_user = data.user.username;
-				currentUserService.setUser($scope.scope_current_user);
+				$scope.scope_current_user = data.user._id;
+				console.log(data.user);
 				$location.path('/');
 			}
 			else{
@@ -130,9 +138,9 @@ appAuth.controller('authController', function($scope, $http, $location, currentU
 			}
 		});
 	};
-
-	$scope.checkSession();
-
+		
 	$scope.checkLocation();
+	
+	$scope.checkSession();	
 
 });

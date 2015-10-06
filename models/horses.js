@@ -6,8 +6,11 @@ var horseSchema = new Schema({
 	password: {type: String, required: true}, //hash created from password
 	created_at: {type: Date, default: Date.now},
 	last_logged: {type: Date, default: Date.now},
-	latitude: String,
-	longitude: String,
+	location: {
+		index: '2dsphere',
+		type: [Number]
+	},
+	miles_away: String,
 	bio: String,
 	pictures: {
 		picture_one: {type: String, default: 'images/default.jpg'},
@@ -19,7 +22,8 @@ var horseSchema = new Schema({
 	},
 	birthday: Date,
 	likes: [{type: Schema.Types.ObjectId, ref: 'Horse', unique: true}],
-	dislike: [{type: Schema.Types.ObjectId, ref: 'Horse', unique: true}],
+	dislikes: [{type: Schema.Types.ObjectId, ref: 'Horse', unique: true}],
+	likedBy: [{type: Schema.Types.ObjectId, ref: 'Horse', unique: true}],
 	settings: {
 		desired_distance: {type: Number, default: 25},
 		desired_gender: {type: String, default: 'both'},

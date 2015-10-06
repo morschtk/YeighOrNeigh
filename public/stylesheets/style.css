@@ -152,3 +152,7 @@ a {
 .regForm md-input-container:not(.md-input-invalid) > label{
   color: #656565; 
 }
+
+.logForm md-input-container:not(.md-input-invalid) > label{
+  color: #656565; 
+}

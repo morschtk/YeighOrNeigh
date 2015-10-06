@@ -41,13 +41,13 @@ module.exports = function(passport){
 					}
 					// Horse and password both match, 
 					// Update the Horse's last logged in time, latitude, and longitude
+					
 					Horse.findOneAndUpdate({
 						'_id': user._id
 					},{
 						$set: {
 							last_logged: Date.now(),
-							latitude: req.body.lat,
-							longitude: req.body.lon
+							location: [req.body.lon, req.body.lat]
 						}
 					},{
 						new: true
@@ -86,13 +86,15 @@ module.exports = function(passport){
 					// if there is no user, create the user
 					var newHorse = new Horse();
 
+					var coords = [req.body.lon, req.body.lat];
+					// var coords = [118.3333, 34.1000];
+
 					// set the user's local credentials
 					newHorse.username = username;
 					newHorse.password = createHash(password);
 					newHorse.birthday = req.body.birthday;
 					newHorse.settings.desired_distance = 25;
-					newHorse.latitude = req.body.lat;
-					newHorse.longitude = req.body.lon;
+					newHorse.location = coords;
 
 					// save the user
 					newHorse.save(function(err) {
@@ -101,6 +103,33 @@ module.exports = function(passport){
 							throw err;  
 						}
 						console.log(newHorse.username + ' Registration succesful');    
+
+						Horse.findOneAndUpdate({
+							_id: newHorse._id
+						},{
+							$push: { likes: newHorse._id }
+						},{
+							upsert: true
+						},
+						function(err){
+							if(err){
+								return done(err);
+							}
+						});
+
+						Horse.findOneAndUpdate({
+							_id: newHorse._id
+						},{
+							$push: { dislikes: newHorse._id }
+						},{
+							upsert: true
+						},
+						function(err){
+							if(err){
+								return done(err);
+							}
+						});
+						
 						return done(null, newHorse);
 					});
 				}
