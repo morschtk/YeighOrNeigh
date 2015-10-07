@@ -19,7 +19,6 @@ appHorse.controller('horseController', function($scope, $timeout, $http, $locati
 		theLikes: $scope.mainLikes,
 		theDislikes: $scope.mainDislikes
 	  };
-	  console.log($scope.userData);
 
 	  var today = new Date();
 	  $scope.card = true;
@@ -38,7 +37,6 @@ appHorse.controller('horseController', function($scope, $timeout, $http, $locati
 	  $http.put('/api/potentialHorses', $scope.userData).success(function(horseData, status){
 	  	$scope.horses = horseData;
 	  	$scope.horse = $scope.horses[0];
-	  	console.log(horseData);
 
 	  	$scope.horse.name = $scope.horses[0].username;
 	  	$scope.horse.bio = $scope.horses[0].bio;
@@ -63,35 +61,6 @@ appHorse.controller('horseController', function($scope, $timeout, $http, $locati
 	  	timeElapsed = numToRound[0] + numToRound[2];
 	  	$scope.horse.lastSeen = timeElapsed;
 	  });
-
-	  // potentialService.update({id: $scope.mainUser, lon: $scope.mainLon, lat: $scope.mainLat}, function(horseData){
-	  // 	$scope.horses = horseData;
-	  // 	$scope.horse = $scope.horses[0];
-	  // 	console.log(horseData);
-
-	  // 	$scope.horse.name = $scope.horses[0].username;
-	  // 	$scope.horse.bio = $scope.horses[0].bio;
-	  // 	$scope.horse.age = $scope.getAge($scope.horses[0].birthday);
-	  // 	$scope.horse.distance = $scope.horses[0].miles_away;
-
-	  // 	var aDate = new Date($scope.horses[0].last_logged);
-	  // 	var seconds = (today.getTime() - aDate.getTime())/1000;
-	  // 	var timeElapsed = seconds/60;
-	  // 	var units = ". minutes";
-	  // 	if(timeElapsed > 60){
-	  // 		timeElapsed = timeElapsed/60;
-	  // 		units = ". hours";
-
-	  // 		if(timeElapsed > 24){
-	  // 			timeElapsed = timeElapsed/24;
-	  // 			units = ". days";
-	  // 		}
-	  // 	}
-	  // 	timeElapsed = timeElapsed + units;
-	  // 	var numToRound = timeElapsed.split(".");
-	  // 	timeElapsed = numToRound[0] + numToRound[2];
-	  // 	$scope.horse.lastSeen = timeElapsed;
-	  // });
 
 	  $scope.dislike = function(ahorse){
 	  	$scope.dislikedHorse = {

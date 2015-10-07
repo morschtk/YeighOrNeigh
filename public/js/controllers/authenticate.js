@@ -95,9 +95,6 @@ appAuth.controller('authController', function($scope, $http, $location, currentU
 				currentUserService.setLon($scope.myLon);
 				currentUserService.setLat($scope.myLat);
 
-				// $localStorage.currLon = 34.1000;
-				// $localStorage.currLat = 118.3333;
-
 			}, function(error){
 				alert("Error occurred. Error.code: " + error.code);
 			//	error.code can be:
@@ -129,7 +126,6 @@ appAuth.controller('authController', function($scope, $http, $location, currentU
 				currentUserService.setAuth(true);
 				$scope.userAuthenticated = currentUserService.getAuth;
 				$scope.scope_current_user = data.user._id;
-				console.log(data.user);
 				$location.path('/');
 			}
 			else{

@@ -29,8 +29,6 @@ router.use('/horses', isAuthenticated);
 router.route('/currHorse')
 	//Update users longitude and latitude
 	.put(function(req, res){
-		console.log("yo " + req.body);
-		console.log("yo 2 " + req.body.id);
 
 		Horse.findOneAndUpdate({
 			_id: req.body.id
@@ -39,7 +37,6 @@ router.route('/currHorse')
 		},{
 			new: true
 		}, function(err, ahorse){
-			console.log(ahorse)
 			return res.json(ahorse);
 		});
 	});
@@ -49,14 +46,11 @@ router.route('/currHorse')
 router.route('/potentialHorses')
 //gets all horses
 	.put(function(req, res){
-		console.log("OVer here " + req.body);
-		console.log(req.body.theLikes);
 
 		//Converts to radians
 		function toRad(num) {
 		  return num * Math.PI / 180;
 		}
-
 		//Calculates distance from lat1,lon1 to lat2,lon2 and returns the distance.
 		function calculateDistance(lat1, lon1, lat2, lon2) {
 		  var R = 3961; //miles		//6371; // km
@@ -79,16 +73,28 @@ router.route('/potentialHorses')
 	             	$maxDistance : 17702.8
 	      		} 
 	      	 } 
-	      	},{likes: 
+	      	},{_id: 
 	      		{
-	      			$nin: [req.body.theLikes]
+	      			$nin: req.body.theLikes
 	      		}
-	      	},{dislike: 
+	      	},{_id: 
 	      		{
-	      			$nin: [req.body.theDislikes]
+	      			$nin: req.body.theDislikes
 	      		}
 	      	}
 	    ]} , function(err, result) { 
+	    	if(err){
+	    		console.log(err);
+	    		var aError = {
+	    			message: "An error occured while finding some users, please try again later."
+	    		};
+	    		return res.json(aError);
+	    	}else if(result == undefined){
+	    		var noResults = {
+	    			message: "There are no horses in your area at this time..."
+	    		};
+	    		return res.json(noResults);
+	    	}else{  
 			for(var i = 0; i < result.length; i++){
 				var theDistance = calculateDistance(req.body.lat, req.body.lon, result[i].location[1], result[i].location[0]);
 				//Round distance
@@ -100,6 +106,7 @@ router.route('/potentialHorses')
 				}
 			}
 			return res.json(result);
+		}
 		});
 	});
 

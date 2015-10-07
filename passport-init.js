@@ -54,7 +54,7 @@ module.exports = function(passport){
 					},
 						function(err, doc){
 							if(err){
-								console.log("here " + err);
+								console.log("Error while logging in " + err);
 								return done(err);
 							}
 							// return user from done method
@@ -113,6 +113,7 @@ module.exports = function(passport){
 						},
 						function(err){
 							if(err){
+								console.log("Error with $push to likes array on Sign up: " + err);
 								return done(err);
 							}
 						});
@@ -126,6 +127,7 @@ module.exports = function(passport){
 						},
 						function(err){
 							if(err){
+								console.log("Error with $push to dislikes array on Sign up: " + err);
 								return done(err);
 							}
 						});
