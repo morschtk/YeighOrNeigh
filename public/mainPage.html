@@ -1,5 +1,5 @@
-<div id="container">
-  <md-content ng-if="userAuthenticated()" class="content md-padding">
+<div id="container" ng-if="userAuthenticated()">
+  <md-content class="content md-padding">
     
     <md-card ng-class="cssCard" ng-show="card">
       <img ng-src="{{horse.pictures.picture_one}}" ng-click="showDetails()" class="md-card-image" alt="horse">

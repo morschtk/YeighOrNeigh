@@ -10,6 +10,18 @@ appAuth.controller('authController', function($scope, $http, $location, currentU
 	var aYear;
 	var yearArr = [];
 	$scope.error_birthday = "";
+	$scope.settingsCheck = false;
+
+	$scope.goSettings = function(where){
+		if(where){
+			$scope.settingsCheck = where;
+			$location.path('/settings');
+		}else{
+			$scope.settingsCheck = where;
+			$location.path('/');
+		}
+		
+	};
 
 	$scope.register = function(){
 	  	$scope.regHorse.lat = $scope.myLat;
@@ -70,6 +82,7 @@ appAuth.controller('authController', function($scope, $http, $location, currentU
 				$localStorage.currUser = data.user._id;
 				$scope.scope_current_user = data.user._id;
 				$scope.logHorse = {username: '', password: '', lat: '', lon: ''};
+
 				$location.path('/');
 			}
 			else{
