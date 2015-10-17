@@ -93,8 +93,10 @@ module.exports = function(passport){
 					newHorse.username = username;
 					newHorse.password = createHash(password);
 					newHorse.birthday = req.body.birthday;
-					newHorse.settings.desired_distance = 25;
+					// newHorse.settings.desired_distance = 40233.6;
 					newHorse.location = coords;
+					newHorse.gender = req.body.gender;
+					newHorse.age = req.body.age;
 
 					// save the user
 					newHorse.save(function(err) {

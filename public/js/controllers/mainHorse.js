@@ -11,13 +11,21 @@ appHorse.controller('horseController', function($scope, $timeout, $http, $locati
 	  $scope.mainLat = currentUserService.getLat();
 	  $scope.mainLikes = currentUserService.getLikes();
 	  $scope.mainDislikes = currentUserService.getDislikes();
+	  $scope.mainDesGender = currentUserService.getDesGender();
+	  $scope.mainDesDist = currentUserService.getDesDist();
+	  $scope.mainMinAge = currentUserService.getMinAge();
+	  $scope.mainMaxAge = currentUserService.getMaxAge();
 
 	  $scope.userData = {
 	  	id: $scope.mainUser,
 		lon: $scope.mainLon,
 		lat: $scope.mainLat,
 		theLikes: $scope.mainLikes,
-		theDislikes: $scope.mainDislikes
+		theDislikes: $scope.mainDislikes,
+		theDesGender: $scope.mainDesGender,
+		theDesDist: $scope.mainDesDist,
+		theMinAge: $scope.mainMinAge,
+		theMaxAge: $scope.mainMaxAge
 	  };
 
 	  var today = new Date();

@@ -2,7 +2,7 @@ var appAuth = angular.module("appAuth", ['ngMaterial', 'ngStorage']);
 
 appAuth.controller('authController', function($scope, $http, $location, currentUserService, $localStorage){
 
-	$scope.regHorse = {username: '', password: '', lat: '', lon: '', birthday: ''};
+	$scope.regHorse = {username: '', password: '', lat: '', lon: '', birthday: '', gender: '', age: ''};
 	$scope.logHorse = {username: '', password: '', lat: '', lon: ''};
 	$scope.userAuthenticated = currentUserService.getAuth;
 	var aDate = new Date();
@@ -10,23 +10,23 @@ appAuth.controller('authController', function($scope, $http, $location, currentU
 	var aYear;
 	var yearArr = [];
 	$scope.error_birthday = "";
-	$scope.settingsCheck = false;
-
-	$scope.goSettings = function(where){
-		if(where){
-			$scope.settingsCheck = where;
-			$location.path('/settings');
-		}else{
-			$scope.settingsCheck = where;
-			$location.path('/');
-		}
+	// $scope.settingsCheck = false;
+	$scope.goSettings = currentUserService.goSettings;
+	$scope.settingsCheck = currentUserService.getSettingsCheck;
+	// $scope.goSettings = function(where){
+	// 	if(where){
+	// 		$scope.settingsCheck = where;
+	// 		$location.path('/settings');
+	// 	}else{
+	// 		$scope.settingsCheck = where;
+	// 		$location.path('/');
+	// 	}
 		
-	};
+	// };
 
 	$scope.register = function(){
 	  	$scope.regHorse.lat = $scope.myLat;
 	  	$scope.regHorse.lon = $scope.myLon;
-
 
 	  	var birth = $scope.regHorse.birthday
 	  	 
@@ -51,6 +51,7 @@ appAuth.controller('authController', function($scope, $http, $location, currentU
 	  	    	$scope.error_birthday = "You must be over 18 to use this app.";
 	  	    }
 	  	    else {
+	  	    	$scope.regHorse.age = age;
   	          	$http.post('/signup', $scope.regHorse).success(function(data){
   	        		if(data.state == 'success'){
   	        			currentUserService.setAuth(true);
@@ -59,7 +60,7 @@ appAuth.controller('authController', function($scope, $http, $location, currentU
 							$localStorage.currUser = data.user._id;
 						}
   	        			$scope.scope_current_user = data.user._id;
-  	        			$scope.regHorse = {username: '', password: '', lat: '', lon: '', birthday: ''};
+  	        			$scope.regHorse = {username: '', password: '', lat: '', lon: '', birthday: '', gender: ''};
   	        			$location.path('/');
   	        		}
   	        		else{

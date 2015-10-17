@@ -16,12 +16,30 @@
               <md-icon style="fill: #3f51b5" md-svg-src="images/icons/key.svg"></md-icon>
               <input ng-model="regHorse.password" type="password" required>
             </md-input-container>
-            <span style="color: #f00">{{error_birthday}}</span>
+            <span style="color: #f00; padding: .25em 0px;">{{error_birthday}}</span>
             <md-input-container class="md-icon-float">
               <label style="fill: #3f51b5">Birth Date</label>
               <md-icon style="fill: #3f51b5" md-svg-src="images/icons/cake.svg"></md-icon>
               <input ng-model="regHorse.birthday" type="date" required>
             </md-input-container>
+
+            <md-input-container layout="row" >
+            <ng-md-icon flex="10" icon="accessibility" style="fill: #3f51b5" size="2.5em"></ng-md-icon>
+            <md-select flex style="color: #656565" placeholder="Gender"  ng-model="regHorse.gender">
+              <md-option value="male">Male</md-option>
+              <md-option value="female">Female</md-option>
+            </md-select>
+            </md-input-container>
+
+            <!-- <md-input-container class="md-icon-float">
+              <label>Gender</label>
+              <ng-md-icon flex="10" icon="accessibility" style="fill: #3f51b5" size="2.5em"></ng-md-icon>
+              <md-select ng-model="regHorse.gender" aria-label= "Gender">
+                <md-option value="men">Male</md-option>
+                <md-option value="women">Female</md-option>
+              </md-select>
+            </md-input-container>
+ -->
           </div>
           <md-button type="submit" class="md-raised md-primary">Register</md-button>
         </form>

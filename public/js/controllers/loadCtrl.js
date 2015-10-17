@@ -45,10 +45,22 @@ appLoad.controller('loadController', function($scope, $http, $location, $localSt
 			lat: $scope.myLat
 		};
 
-		$http.put('/api/currHorse', $scope.theCoords).success(function(currHorse, status){			
+		//Gets the current users data to prepare for the potential matches 
+		$http.put('/api/currHorse', $scope.theCoords).success(function(currHorse, status){
 			currentUserService.setLikes(currHorse.likes);
 			currentUserService.setDislikes(currHorse.dislikes);
 			currentUserService.setLikedBy(currHorse.likedBy);
+
+			currentUserService.setDesDist(currHorse.settings.desired_distance);
+			currentUserService.setMinAge(currHorse.settings.desired_age_min);
+			currentUserService.setMaxAge(currHorse.settings.desired_age_max);
+			
+			if(currHorse.settings.desired_gender == 'both'){
+				$scope.desGenderArr = ['male', 'female'];
+			}else{
+				$scope.desGenderArr = [currHorse.settings.desired_gender];
+			}
+			currentUserService.setDesGender($scope.desGenderArr);
 
 			$timeout(function(){
 		  		$location.path('/home');

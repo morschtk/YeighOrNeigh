@@ -41,10 +41,9 @@ router.route('/currHorse')
 		});
 	});
 
-
 				// potentialService
 router.route('/potentialHorses')
-//gets all horses
+//gets all horses that match the current users search criteria
 	.put(function(req, res){
 
 		//Converts to radians
@@ -66,20 +65,32 @@ router.route('/potentialHorses')
 
 		// $maxDistance is in meters, convert to miles
 		Horse.find( { $and: [{ location :
-	         { $near :
-	           { $geometry :
-	              { type : "Point" ,
-	                coordinates : [  req.body.lon , req.body.lat ] } ,
-	             	$maxDistance : 17702.8
-	      		} 
-	      	 } 
-	      	},{_id: 
-	      		{
-	      			$nin: req.body.theLikes
+		        { $near :
+		          { $geometry :
+		             { type : "Point" ,
+		               coordinates : [  req.body.lon , req.body.lat ] } ,
+		        	   $maxDistance : req.body.theDesDist //17702.8
+		   		  } 
+		      	} 
+	      	},{ 
+	      		_id: { 
+	      			$nin: req.body.theLikes 
 	      		}
-	      	},{_id: 
-	      		{
-	      			$nin: req.body.theDislikes
+	      	},{ 
+	      		_id: { 
+	      			$nin: req.body.theDislikes 
+	      		}
+	      	},{ 
+	      		gender: { 
+	      			$in: req.body.theDesGender
+	      		}
+	      	},{ 
+	      		age: { 
+	      			$lte: req.body.theMaxAge 
+	      		}
+	      	},{ 
+	      		age: { 
+	      			$gte: req.body.theMinAge 
 	      		}
 	      	}
 	    ]} , function(err, result) { 
@@ -160,7 +171,26 @@ router.route('/like/:id')
 			return res.json("liked")
 		});
 	});
-	
+
+router.route('/settings/:id')
+	.put(function(req, res){
+		Horse.findOneAndUpdate({
+			_id: req.params.id
+		},{
+			$set:{
+				'settings.desired_distance': req.body.maxDistance,
+				'settings.desired_gender': req.body.desGender,
+				'settings.desired_age_min': req.body.minAge,
+				'settings.desired_age_max': req.body.maxAge
+			}
+		}, function(err, ahorse){
+			if(err){
+				console.log('error updating users settings: ' + err);
+			}
+			return res.json(ahorse.username + " settings have been changed.");
+		});
+	});
+
 module.exports = router;
 
 

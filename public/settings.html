@@ -1,11 +1,13 @@
 <div id="container">
  <md-content class="content md-padding">  
-    <md-card>
+    
+      <form ng-submit="saveSettings()">
+      <md-card>
       <md-card-content>
-
+      <div>
           <div layout="row">
             <div flex="66" layout layout-align="start center">
-              <span class="md-body-1">Maximum Distance</span>
+              <span class="md-title">Maximum Distance</span>
             </div>
 
             <div flex layout layout-align="center center">
@@ -17,8 +19,58 @@
 
           <md-slider flex="fill" min="0" max="100" ng-model="currUser.maxDistance" aria-label="Maximum-Distance" class="md-primary">
           </md-slider>
-
+      </div>
       </md-card-content>
-    </md-card>
+      
+      <md-card-content>
+      <div>
+          <div layout="column">
+            <div layout layout-align="start center">
+              <span class="md-title">Desired Gender</span>
+            </div>
+
+            <md-select placeholder="currUser.desGender" ng-model="currUser.desGender">
+              <md-option value="male">Only Men</md-option>
+              <md-option value="female">Only Women</md-option>
+              <md-option value="both">Men and Women</md-option>
+            </md-select>
+          </div>
+      </div>
+      </md-card-content>
+      
+      <md-card-content>
+      <div>
+          <div layout="row">
+            <div flex="50" layout layout-align="start center">
+              <span class="md-title">Age Range</span>
+            </div>
+
+            <div flex layout layout-align="center center">
+              <md-input-container style="padding:0px">
+                <input style="color:black" disabled ng-model="range" aria-label="Maximum-Distance" aria-controls="Maximum-Distance">
+              </md-input-container>
+            </div>
+          </div>
+          
+          <div layout="row">
+            <div flex="10" layout layout-align="start center">
+              <span class="md-body-1">Min</span>
+            </div>
+            <md-slider flex="fill" min="18" max="55" ng-model="currUser.minAge" ng-change="changeAge('min', currUser.minAge)" aria-label="Minimum-Age" class="md-primary"></md-slider>
+          </div>
+
+          <div layout="row">
+            <div flex="10" layout layout-align="start center">
+              <span class="md-body-1">Max</span>
+            </div>
+            <md-slider flex="fill" min="18" max="55" ng-model="currUser.maxAge" ng-change="changeAge('max', currUser.maxAge)" aria-label="Maximum-Age" class="md-primary"></md-slider>
+          </div>
+      </div>
+      </md-card-content>
+      </md-card>
+      <md-button type="submit" class="md-raised md-primary">Save</md-button>
+      </form>
+      
+    
   </md-content>
 </div>

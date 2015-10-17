@@ -21,7 +21,7 @@
     
   </head>
   <body layout="column" ng-controller="authController">
-  	<md-toolbar layout="row" ng-if="!settingsCheck" layout-align="space-around center">
+  	<md-toolbar layout="row" ng-if="!settingsCheck()" layout-align="space-around center">
 
       <ng-md-icon ng-click="goSettings(true)" ng-if="userAuthenticated()" icon="settings_applications" style="fill: #fff; height: 45px;" size="2.25em"></ng-md-icon>
 
@@ -31,7 +31,7 @@
 
     </md-toolbar>
 
-    <md-toolbar layout="row" ng-if="settingsCheck" layout-align="space-around center" >
+    <md-toolbar layout="row" ng-if="settingsCheck()" layout-align="space-around center" >
   
       <h3 class="title md-headline">&nbsp;</h3>
 

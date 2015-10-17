@@ -1,15 +1,32 @@
 var appServices = angular.module("appServices", ['ngResource']);
 
-appServices.factory('currentUserService', function() {
+appServices.factory('currentUserService', function($location) {
     var currUserCheck = undefined;
     var authUser = false;
+    var settingsCheck = false;
     var userLat = undefined;
     var userLon = undefined;
+    var desDist = undefined;
+    var minAge = undefined;
+    var maxAge = undefined;
     var arrLikes = [];
     var arrDislikes = [];
     var arrLikedBy = [];
+    var desGender = [];
 
     return {
+        goSettings: function(where){
+            if(where){
+                settingsCheck = where;
+                $location.path('/settings');
+            }else{
+                settingsCheck = where;
+                $location.path('/');
+            }
+        },
+        getSettingsCheck: function() {
+            return settingsCheck;
+        },
         getCheck: function() {
             return currUserCheck;
         },
@@ -51,6 +68,30 @@ appServices.factory('currentUserService', function() {
         },
         setDislikes: function(value) {
             arrDislikes = value;
+        },
+        getDesGender: function(){
+            return desGender;
+        },
+        setDesGender: function(value) {
+            desGender = value;
+        },
+        getDesDist: function(){
+            return desDist;
+        },
+        setDesDist: function(value) {
+            desDist = value;
+        },
+        getMinAge: function(){
+            return minAge;
+        },
+        setMinAge: function(value) {
+            minAge = value;
+        },
+        getMaxAge: function(){
+            return maxAge;
+        },
+        setMaxAge: function(value) {
+            maxAge = value;
         }
     };
 });
@@ -80,5 +121,12 @@ appServices.factory('likeService',['$resource', function($resource){
     return $resource('/api/like/:id', null,
         {
             'update': {method: 'put'}
+    });
+}]);
+
+appServices.factory('settingService',['$resource', function($resource){
+    return $resource('/api/settings/:id', null,
+        {
+            'update': {method:'put'}
     });
 }]);
