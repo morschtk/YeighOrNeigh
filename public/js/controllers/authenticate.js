@@ -10,19 +10,13 @@ appAuth.controller('authController', function($scope, $http, $location, currentU
 	var aYear;
 	var yearArr = [];
 	$scope.error_birthday = "";
-	// $scope.settingsCheck = false;
 	$scope.goSettings = currentUserService.goSettings;
 	$scope.settingsCheck = currentUserService.getSettingsCheck;
-	// $scope.goSettings = function(where){
-	// 	if(where){
-	// 		$scope.settingsCheck = where;
-	// 		$location.path('/settings');
-	// 	}else{
-	// 		$scope.settingsCheck = where;
-	// 		$location.path('/');
-	// 	}
-		
-	// };
+	$scope.showLogInForm = true;
+
+	$scope.changeForm = function(which){
+		$scope.showLogInForm = which;
+	};
 
 	$scope.register = function(){
 	  	$scope.regHorse.lat = $scope.myLat;

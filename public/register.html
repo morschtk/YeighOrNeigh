@@ -1,5 +1,5 @@
 <div id="container">
-  <md-content ng-if="!userAuthenticated()" class="content md-padding">  
+  <md-content ng-if="!userAuthenticated() && !showLogInForm" class="content md-padding">  
     <md-card>
       <md-card-content>
         <form ng-submit="register()">
@@ -24,30 +24,22 @@
             </md-input-container>
 
             <md-input-container layout="row" >
-            <ng-md-icon flex="10" icon="accessibility" style="fill: #3f51b5" size="2.5em"></ng-md-icon>
-            <md-select flex style="color: #656565" placeholder="Gender"  ng-model="regHorse.gender">
-              <md-option value="male">Male</md-option>
-              <md-option value="female">Female</md-option>
-            </md-select>
-            </md-input-container>
-
-            <!-- <md-input-container class="md-icon-float">
-              <label>Gender</label>
-              <ng-md-icon flex="10" icon="accessibility" style="fill: #3f51b5" size="2.5em"></ng-md-icon>
-              <md-select ng-model="regHorse.gender" aria-label= "Gender">
-                <md-option value="men">Male</md-option>
-                <md-option value="women">Female</md-option>
+              <ng-md-icon flex-order="1" icon="accessibility" style="fill: #3f51b5" size="2.5em"></ng-md-icon>
+              <md-select required flex-order="2" flex style="color: #656565" placeholder="Gender" ng-model="regHorse.gender">
+                <md-option value="male">Male</md-option>
+                <md-option value="female">Female</md-option>
               </md-select>
             </md-input-container>
- -->
+
           </div>
           <md-button type="submit" class="md-raised md-primary">Register</md-button>
+          <a ng-click="changeForm(true)">Already have an account, Log In!</a>
         </form>
       </md-card-content>
     </md-card>
   </md-content>
 
-  <md-content ng-if="!userAuthenticated()" class="content md-padding">  
+  <md-content ng-if="!userAuthenticated() && showLogInForm" class="content md-padding">  
     <md-card>
       <md-card-content>
         <form ng-submit="logIn()">
@@ -57,15 +49,16 @@
             <md-input-container class="md-icon-float">
               <label name="name">Username</label>
               <md-icon style="fill: #3f51b5" md-svg-src="images/icons/account.svg"></md-icon>
-              <input ng-model="logHorse.username">
+              <input required ng-model="logHorse.username">
             </md-input-container>
             <md-input-container class="md-icon-float">
               <label style="fill: #3f51b5">Password</label>
               <md-icon style="fill: #3f51b5" md-svg-src="images/icons/key.svg"></md-icon>
-              <input ng-model="logHorse.password" type="password">
+              <input required ng-model="logHorse.password" type="password">
             </md-input-container>
           </div>
           <md-button type="submit" class="md-raised md-primary">Log In</md-button>
+          <a ng-click="changeForm(false)">Don't have an account, Sign Up!</a>
         </form>
       </md-card-content>
     </md-card>
