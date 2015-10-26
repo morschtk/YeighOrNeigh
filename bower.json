@@ -1,0 +1,23 @@
+{
+  "name": "HorseTinder",
+  "description": "Tinder for Horses",
+  "main": "bin\\www",
+  "authors": [
+    "morschtk <morschtk@gmail.com>"
+  ],
+  "license": "no",
+  "homepage": "https://github.com/morschtk/YeighOrNeigh",
+  "moduleType": [],
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "ng-file-upload": "~9.1.1",
+    "ng-file-upload-shim": "~9.1.1"
+  }
+}

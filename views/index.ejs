@@ -4,8 +4,14 @@
   	<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/0.9.4/angular-material.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=RobotoDraft:300,400,500,700,400italic">
     <link rel='stylesheet' href='/stylesheets/style.css' />
+    
+    <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
 	<!-- Angular Material Dependencies -->
+    
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
+    <script src="js/ng-file-upload-shim.min.js"></script>
+    <script src="js/ng-file-upload.min.js"></script>
+
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular-animate.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular-aria.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angular_material/0.9.4/angular-material.min.js"></script>
@@ -13,7 +19,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0/angular-resource.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ngStorage/0.3.9/ngStorage.min.js"></script>
 	
-    <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+    
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0/angular-route.min.js"></script>
 
     <meta name="viewport" content="initial-scale=1" />
@@ -21,9 +27,9 @@
     
   </head>
   <body layout="column" ng-controller="authController">
-  	<md-toolbar layout="row" ng-if="!settingsCheck()" layout-align="space-around center">
+  	<md-toolbar layout="row" ng-if="!settingsCheck() && !editCheck()" layout-align="space-around center">
 
-      <ng-md-icon ng-click="goSettings(true)" ng-if="userAuthenticated()" icon="settings_applications" style="fill: #fff; height: 45px;" size="2.25em"></ng-md-icon>
+      <ng-md-icon ng-click="goSettings('settings')" ng-if="userAuthenticated()" icon="settings_applications" style="fill: #fff; height: 45px;" size="2.25em"></ng-md-icon>
 
   		<h3 class="title md-headline">Yeigh or Neigh</h3>
 
@@ -38,7 +44,17 @@
       <ng-md-icon icon="settings_applications" style="fill: #fff; height: 45px;" size="2.25em"></ng-md-icon>
 
       <!-- <ng-md-icon ng-click="goSettings(false)" icon="arrow_forward" style="fill: #fff; height: 40px;" size="2em"></ng-md-icon> -->
-      <ng-md-icon ng-click="goSettings(false)" icon="navigate_next" style="fill: #fff; height: 40px;" size="2em"></ng-md-icon>
+      <ng-md-icon ng-click="goSettings('home')" icon="navigate_next" style="fill: #fff; height: 40px;" size="2em"></ng-md-icon>
+
+    </md-toolbar>
+
+    <md-toolbar layout="row" ng-if="editCheck()" layout-align="space-around center" >
+  
+      <h3 class="title md-headline">&nbsp;</h3>
+
+      <h5 class="title md-subtitle">Edit Info</h5>
+
+      <h5 class="title md-subtitle" ng-click="goSettings('home')">Done</h5>
 
     </md-toolbar>
 

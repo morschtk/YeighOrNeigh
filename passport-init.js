@@ -97,6 +97,7 @@ module.exports = function(passport){
 					newHorse.location = coords;
 					newHorse.gender = req.body.gender;
 					newHorse.age = req.body.age;
+					newHorse.pictures.push('images/default.jpg');
 
 					// save the user
 					newHorse.save(function(err) {

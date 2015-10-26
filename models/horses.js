@@ -15,12 +15,8 @@ var horseSchema = new Schema({
 	miles_away: String,
 	bio: String,
 	pictures: {
-		picture_one: {type: String, default: 'images/default.jpg'},
-		picture_two: {type: String, default: null},
-		picture_three: {type: String, default: null},
-		picture_four: {type: String, default: null},
-		picture_five: {type: String, default: null},
-		picture_six: {type: String, default: null}
+		type: [String], 
+		validate: arrayLimit
 	},
 	birthday: Date,
 	likes: [{type: Schema.Types.ObjectId, ref: 'Horse', unique: true}],

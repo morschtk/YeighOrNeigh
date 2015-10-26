@@ -3,6 +3,7 @@ var router = express.Router();
 var mongoose = require('mongoose');
 var Horse = mongoose.model('Horse');
 var connectMongo = require("connect-mongo");
+var fs = require('fs');
 
 //Used for routes that must be authenticated.
 function isAuthenticated (req, res, next) {
@@ -24,29 +25,7 @@ function isAuthenticated (req, res, next) {
 
 //Register the authentication middleware
 router.use('/horses', isAuthenticated);
-
-				// horseService
-router.route('/currHorse')
-	//Update users longitude and latitude
-	.put(function(req, res){
-
-		Horse.findOneAndUpdate({
-			_id: req.body.id
-		},{
-			$set: {location: [req.body.lon, req.body.lat]}
-		},{
-			new: true
-		}, function(err, ahorse){
-			return res.json(ahorse);
-		});
-	});
-
-				// potentialService
-router.route('/potentialHorses')
-//gets all horses that match the current users search criteria
-	.put(function(req, res){
-
-		//Converts to radians
+//Converts to radians
 		function toRad(num) {
 		  return num * Math.PI / 180;
 		}
@@ -62,6 +41,29 @@ router.route('/potentialHorses')
 		  var d = R * c;
 		  return d;
 		}
+				// horseService
+router.route('/currHorse')
+	//Update users longitude and latitude
+	.put(function(req, res){
+
+		Horse.findOneAndUpdate({
+			_id: req.body.id
+		},{
+			$set: {location: [req.body.lon, req.body.lat]}
+		},{
+			new: true
+		}, function(err, ahorse){
+			
+			ahorse.miles_away = "1 mile";
+			
+			return res.json(ahorse);
+		});
+	});
+
+				// potentialService
+router.route('/potentialHorses')
+//gets all horses that match the current users search criteria
+	.put(function(req, res){		
 
 		// $maxDistance is in meters, convert to miles
 		Horse.find( { $and: [{ location :
@@ -189,6 +191,54 @@ router.route('/settings/:id')
 			}
 			return res.json(ahorse.username + " settings have been changed.");
 		});
+	});
+
+
+
+router.route('/images')
+	.post(function(req, res){
+		console.log("HERE!!!!!");
+		console.log(req.body);
+		console.log(req.files);
+
+		var str = req.files.file.originalFilename;
+		var n = str.lastIndexOf(".");
+	    var fileType = str.substr(n);
+
+		var myName = 'images/' + req.body.theUser + "_" + req.body.pos + fileType;
+		var relPath = './public/' + myName;
+		console.log(myName);
+
+		fs.rename(
+			req.files.file.path,
+			relPath,
+			function(error) {
+	            if(error) {
+			        return res.json("it broke");
+			    }
+
+			    Horse.findOneAndUpdate({
+			    	_id: req.body.theUser
+			    },{
+			    	$push: {
+			    		pictures:{ 
+			    			$each:[myName],
+			    			$position: Math.abs(req.body.pos)
+			    		}
+			    	}
+			    },{
+			    	new: true
+			    }, function(err, doc){
+			    	if(err){
+			    		console.log(err)
+			    		return res.json("There was an error uploading your document");
+			    		//TODO: delete file from server.
+			    	}
+			    	console.log(doc);
+			    	return res.json("Your picture has been uploaded succesfully!");
+			    });
+			}
+	    );
 	});
 
 module.exports = router;

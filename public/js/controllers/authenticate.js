@@ -12,6 +12,8 @@ appAuth.controller('authController', function($scope, $http, $location, currentU
 	$scope.error_birthday = "";
 	$scope.goSettings = currentUserService.goSettings;
 	$scope.settingsCheck = currentUserService.getSettingsCheck;
+	$scope.goEdit = currentUserService.goEdit;
+	$scope.editCheck = currentUserService.getEditCheck;
 	$scope.showLogInForm = true;
 
 	$scope.changeForm = function(which){

@@ -45,6 +45,20 @@ appLoad.controller('loadController', function($scope, $http, $location, $localSt
 			lat: $scope.myLat
 		};
 
+		var today = new Date();
+		$scope.card = true;
+		$scope.details = false;	
+
+		$scope.getAge = function(dateString) {
+		  var birthDate = new Date(dateString);
+		  var age = today.getFullYear() - birthDate.getFullYear();
+		  var m = today.getMonth() - birthDate.getMonth();
+		  if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+		      age--;
+		  }
+		  return age;
+		}
+
 		//Gets the current users data to prepare for the potential matches 
 		$http.put('/api/currHorse', $scope.theCoords).success(function(currHorse, status){
 			currentUserService.setLikes(currHorse.likes);
@@ -54,6 +68,35 @@ appLoad.controller('loadController', function($scope, $http, $location, $localSt
 			currentUserService.setDesDist(currHorse.settings.desired_distance);
 			currentUserService.setMinAge(currHorse.settings.desired_age_min);
 			currentUserService.setMaxAge(currHorse.settings.desired_age_max);
+
+			currentUserService.setBio(currHorse.bio);
+			
+			currentUserService.setPics(currHorse.pictures);
+			currentUserService.setName(currHorse.username);
+			currentUserService.setAge($scope.getAge(currHorse.birthday));
+	  		currentUserService.setMiles(currHorse.miles_away);
+
+
+
+			var aDate = new Date(currHorse.last_logged);
+			var seconds = (today.getTime() - aDate.getTime())/1000;
+			var timeElapsed = seconds/60;
+			var units = ". minutes";
+			if(timeElapsed > 60){
+				timeElapsed = timeElapsed/60;
+				units = ". hours";
+
+				if(timeElapsed > 24){
+					timeElapsed = timeElapsed/24;
+					units = ". days";
+				}
+			}
+			timeElapsed = timeElapsed + units;
+			var numToRound = timeElapsed.split(".");
+			timeElapsed = numToRound[0] + numToRound[2];
+			currentUserService.setTimeAway(timeElapsed);
+
+
 			
 			if(currHorse.settings.desired_gender == 'both'){
 				$scope.desGenderArr = ['male', 'female'];

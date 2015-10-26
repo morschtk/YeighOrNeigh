@@ -157,3 +157,13 @@ a {
   color: #656565; 
 }
 
+.otherForm{
+  cursor: pointer;
+}
+
+.editImage{
+  min-height: 100%;
+  margin: .5em;
+  position: relative;
+  
+}

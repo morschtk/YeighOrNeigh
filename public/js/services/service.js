@@ -4,28 +4,52 @@ appServices.factory('currentUserService', function($location) {
     var currUserCheck = undefined;
     var authUser = false;
     var settingsCheck = false;
+    var editCheck = false;
+    var userBio = undefined;
     var userLat = undefined;
     var userLon = undefined;
     var desDist = undefined;
     var minAge = undefined;
     var maxAge = undefined;
+    var bio = undefined;
+    var name = undefined;
+    var age = undefined;
+    var miles = undefined;
+    var timeAway = undefined;
     var arrLikes = [];
     var arrDislikes = [];
     var arrLikedBy = [];
+    var pictures = [];
     var desGender = [];
 
     return {
         goSettings: function(where){
-            if(where){
-                settingsCheck = where;
-                $location.path('/settings');
-            }else{
-                settingsCheck = where;
-                $location.path('/');
+        console.log(where);
+            switch(where){
+                case 'settings':
+                    settingsCheck = true;
+                    editCheck = false;
+                    $location.path('/settings');
+                    break;
+                case 'home':
+                    settingsCheck = false;
+                    editCheck = false;
+                    $location.path('/');
+                    break;
+                case 'edit':
+                    settingsCheck = false;
+                    editCheck = true;
+                    $location.path('/editProfile');
+                    break;
+                default:
+                    alert("Your Min age can not be larger then your max age.");
             }
         },
         getSettingsCheck: function() {
             return settingsCheck;
+        },
+        getEditCheck: function() {
+            return editCheck;
         },
         getCheck: function() {
             return currUserCheck;
@@ -38,6 +62,12 @@ appServices.factory('currentUserService', function($location) {
         },
         setAuth: function(value) {
             authUser = value;
+        },
+        setBio: function(value) {
+            userBio = value;
+        },
+        getBio: function() {
+            return userBio;
         },
         getLat: function() {
             return userLat;
@@ -87,11 +117,47 @@ appServices.factory('currentUserService', function($location) {
         setMinAge: function(value) {
             minAge = value;
         },
+        getBio: function(){
+            return bio;
+        },
+        setBio: function(value) {
+            bio = value;
+        },
+        getName: function(){
+            return name;
+        },
+        setName: function(value) {
+            name = value;
+        },
+        getAge: function(){
+            return age;
+        },
+        setAge: function(value) {
+            age = value;
+        },
+        getMiles: function(){
+            return miles;
+        },
+        setMiles: function(value) {
+            miles = value;
+        },
+        getTimeAway: function(){
+            return timeAway;
+        },
+        setTimeAway: function(value) {
+            timeAway = value;
+        },
         getMaxAge: function(){
             return maxAge;
         },
         setMaxAge: function(value) {
             maxAge = value;
+        },
+        getPics: function(){
+            return pictures;
+        },
+        setPics: function(value) {
+            pictures = value;
         }
     };
 });
@@ -130,3 +196,4 @@ appServices.factory('settingService',['$resource', function($resource){
             'update': {method:'put'}
     });
 }]);
+

@@ -9,20 +9,24 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var connectMongo = require("connect-mongo");
+var multiparty = require('connect-multiparty');
 
 var MongoStore = connectMongo(session);
-//connect to database
+// Connect to database
 if(process.env.DEV_ENV){
-  //Connect to local DB
+  // Connect to local DB
   mongoose.connect('mongodb://localhost:27017/xxxx');
 } else{
 // The first set of xxxx's is your db username, second is your db password, and third is the name of your collection
  mongoose.connect('mongodb://xxxx:xxxx@ds042698.mongolab.com:42698/xxxx');
 }
+
 var api = require('./routes/api');
 var authenticate = require('./routes/authenticate')(passport);
 
 var app = express();
+
+app.use(multiparty());
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
