@@ -36,6 +36,11 @@ appServices.factory('currentUserService', function($location) {
                     editCheck = false;
                     $location.path('/');
                     break;
+                case 'signout':
+                    settingsCheck = false;
+                    editCheck = false;
+                    $location.path('/register');
+                    break;
                 case 'edit':
                     settingsCheck = false;
                     editCheck = true;

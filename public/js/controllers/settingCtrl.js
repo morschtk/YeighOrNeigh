@@ -1,7 +1,52 @@
 
-var appSettings = angular.module("appSettings", ['ngMaterial', 'ngStorage', 'ngFileUpload']);
+var appSettings = angular.module("appSettings", ['ngMaterial', 'ngStorage', 'ngFileUpload'], function($compileProvider){
+	
+	$compileProvider.directive('compile', function($compile, currentUserService, $location) {
+      // directive factory creates a link function
+      return function(scope, element, attrs) {
+        scope.$watch(
+          function(scope) {
+             // watch the $scope.dspPhotos array for changes
+            return scope.dspPhotos;
+          },
+          function(value) {
+          	for(var i = 0; i < element[0].children.length; i++){
+          		for(var n = 0; n < element[0].children[i].children.length; n++){
+	          		if(element[0].children[i].children[n].children[0].src.includes('add_user.png')){
+	          			var div = element[0].children[i].children[n];
+	          			div.removeAttribute("ng-click");
+	          			div.removeAttribute("ngf-select");
+	          			var place = div.id.slice(-1);
+	          			var att = document.createAttribute('ngf-select');
+	          			att.value = "upload($file, '" + last + "')";
+	        			div.setAttributeNode(att);
+	          		}else{
+	          			var div = element[0].children[i].children[n];
+	          			div.removeAttribute("ngf-select");
+	          			div.removeAttribute("ng-click");
+	          			var place = div.id.slice (-1);
+	          			var last = Math.abs(place)+1;
+	          			var att = document.createAttribute('ng-click');
+	          			att.value = "unlink('" + place + "', dspPhotos[" + place + "])";
+	        			div.setAttributeNode(att);
+	          		}
+	          	}
+          	}
 
-appSettings.controller('settingController',[ '$scope', 'Upload', '$timeout', '$http', '$location', 'potentialService', 'settingService', 'currentUserService', '$localStorage', function($scope, Upload, $timeout, $http, $location, potentialService, settingService, currentUserService, $localStorage) {
+            // compile the new DOM and link it to the current scope.
+            // NOTE: we only compile .childNodes so that
+            // we don't get into infinite loop compiling ourselves
+            
+            $compile(element.contents())(scope);
+          }
+        );
+      };
+    });
+});
+
+
+
+appSettings.controller('settingController',[ '$scope', 'Upload', '$timeout', '$http', '$location', '$route', 'potentialService', 'settingService', 'currentUserService', '$localStorage', function($scope, Upload, $timeout, $http, $location, $route, potentialService, settingService, currentUserService, $localStorage) {
 
 	$scope.currUser = {};
 	var roundDist = currentUserService.getDesDist() * 0.00062137;
@@ -32,32 +77,43 @@ appSettings.controller('settingController',[ '$scope', 'Upload', '$timeout', '$h
 	$scope.horse.age = currentUserService.getAge();
 	$scope.horse.distance = currentUserService.getMiles();
 	$scope.horse.lastSeen = currentUserService.getTimeAway();
-	$scope.photosArr = currentUserService.getPics();
-	$scope.dspPhotos = [];
-	for(var i=0; i<6; i++){
-		if($scope.photosArr[i] == undefined){
-			$scope.dspPhotos[i] = 'images/add_user.png';
-		}else{
-			$scope.dspPhotos[i] = $scope.photosArr[i];
+
+	$scope.generateImages = function(){
+		$scope.photosArr = currentUserService.getPics();
+		$scope.dspPhotos = [];
+		var tempArr = [];
+		for(var i=0; i<6; i++){
+			if($scope.photosArr[i] == undefined){
+				tempArr[i] = 'images/add_user.png';
+
+			}else{
+				tempArr[i] = $scope.photosArr[i].path;
+			}
+		}
+		$scope.dspPhotos = tempArr;
+	};
+	$scope.generateImages();
+
+	$scope.unlink = function(pos, oldPath){
+		$scope.pos = pos;
+		$scope.oldPath = oldPath;
+		if($scope.oldPath !== 'images/add_user.png'){
+			var delData = {
+				user: $localStorage.currUser,
+				path: oldPath,
+				pos: $scope.pos
+			};
+			$http.put('/api/images', delData).success(function(data,status){
+				currentUserService.setPics(data);
+				$scope.generateImages();
+				$route.reload();
+			});
 		}
 	}
-	
-	$scope.hideUplaod = false;
-	console.log($scope.photosArr);
-	console.log($scope.dspPhotos);
 
-	$scope.alterImage = function(imgNum, path){
-		console.log(imgNum);
-		console.log(path);
-		$timeout(function() {
-		  document.getElementById(imgNum).click();
-
-		}, 100);
-	};
-
-console.log($localStorage.currUser);
 	$scope.upload = function(afile, pos) { 
 		$scope.pos = pos;
+
         Upload.upload({
           url: '/api/images',
           data: {
@@ -66,7 +122,11 @@ console.log($localStorage.currUser);
             'pos': $scope.pos
           }
         }).then(function (resp) {
-        console.log('Success ' + resp.config.data.file.name + ' uploaded. Response: ' + resp.data);
+        	console.log('Success ' + resp.config.data.file.name);
+        	console.log(resp.data);
+        	currentUserService.setPics(resp.data);
+			$scope.generateImages();
+        	$route.reload();
         }, function (resp) {
             console.log('Error status: ' + resp.status);
         }, function (evt) {
@@ -76,8 +136,6 @@ console.log($localStorage.currUser);
     };
 
 	$scope.changeAge = function(id, num){
-		console.log($scope.currUser.minAge);
-		console.log($scope.currUser.maxAge-4);
 		if($scope.currUser.minAge > ($scope.currUser.maxAge-4)){
 			switch(id){
 				case 'min':

@@ -2,19 +2,19 @@
 
   <md-content class="content md-padding">
     <md-card ng-class="cssCard">
-    
-    <div layout="row" layout-align="space-around center">
-      <div flex class="editImage" ngf-select="upload($file, '0')"><img ng-src="{{dspPhotos[0]}}" alt="horse"></div>
-      <div flex class="editImage"><img ng-click="alterImage('1', dspPhotos[1]);" ng-src="{{dspPhotos[1]}}" alt="horse"></div>
-      <div flex class="editImage"><img ng-click="alterImage('2', dspPhotos[2]);" ng-src="{{dspPhotos[2]}}" alt="horse"></div>
+    <div compile>
+      <div layout="row" layout-align="space-around center">
+        <div id="div0" flex class="editImage" ><img ng-src="{{dspPhotos[0]}}" alt="horse"></div>
+        <div id="div1" flex class="editImage" ><img ng-src="{{dspPhotos[1]}}" alt="horse"></div>
+        <div id="div2" flex class="editImage" ><img ng-src="{{dspPhotos[2]}}" alt="horse"></div>
+      </div>
+        
+      <div layout="row" layout-align="space-around center">
+        <div id="div3" flex class="editImage" ><img ng-src="{{dspPhotos[3]}}" alt="horse"></div>
+        <div id="div4" flex class="editImage" ><img ng-src="{{dspPhotos[4]}}" alt="horse"></div>
+        <div id="div5" flex class="editImage" ><img ng-src="{{dspPhotos[5]}}" alt="horse"></div>
+      </div>
     </div>
-      
-    <div layout="row" layout-align="space-around center">
-      <div flex class="editImage"><img ng-click="alterImage('3', dspPhotos[3]);" ng-src="{{dspPhotos[3]}}" alt="horse"></div>
-      <div flex class="editImage"><img ng-click="alterImage('4', dspPhotos[4]);" ng-src="{{dspPhotos[4]}}" alt="horse"></div>
-      <div flex class="editImage"><img ng-click="alterImage('5', dspPhotos[5]);" ng-src="{{dspPhotos[5]}}" alt="horse"></div>
-    </div>
-    
       <md-card-content class="cardContent">
         <h2 class="displayName md-headline">{{horse.name}}<span class="spanAge"> is {{horse.age}} years old.</span></h2>
         <div>
@@ -27,15 +27,5 @@
   </md-content>
   
   <div style="color:red;" ng-if="user.uploadError">{{user.uploadError}}</div>
-
-   <!--<form action="/api/settings/images" ng-show="hideUplaod" method="post" enctype="multipart/form-data">
-    <input type="file" name="displayImage"  id="image0">
-  </form>
-    <input type="file" ng-show="hideUplaod" ng-change="angular.element(this).scope().saveChange(this.files)" id="image1">
-    <input type="file" ng-show="hideUplaod" ng-change="angular.element(this).scope().saveChange(this.files)" id="image2">
-    <input type="file" ng-show="hideUplaod" ng-change="angular.element(this).scope().saveChange(this.files)" id="image3">
-    <input type="file" ng-show="hideUplaod" ng-change="angular.element(this).scope().saveChange(this.files)" id="image4">
-    <input type="file" ng-show="hideUplaod" ng-change="angular.element(this).scope().saveChange(this.files)" id="image5"> 
-  </form>-->
 </div>
 

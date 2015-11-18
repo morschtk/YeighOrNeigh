@@ -52,9 +52,7 @@ appAuth.controller('authController', function($scope, $http, $location, currentU
   	        		if(data.state == 'success'){
   	        			currentUserService.setAuth(true);
   	        			$scope.userAuthenticated = currentUserService.getAuth;
-  	        			if(!$localStorage.currUser){
-							$localStorage.currUser = data.user._id;
-						}
+						$localStorage.currUser = data.user._id;
   	        			$scope.scope_current_user = data.user._id;
   	        			$scope.regHorse = {username: '', password: '', lat: '', lon: '', birthday: '', gender: ''};
   	        			$location.path('/');
@@ -76,6 +74,7 @@ appAuth.controller('authController', function($scope, $http, $location, currentU
 			if(data.state == 'success'){
 				currentUserService.setAuth(true);
 				$scope.userAuthenticated = currentUserService.getAuth;
+				console.log(data);
 				$localStorage.currUser = data.user._id;
 				$scope.scope_current_user = data.user._id;
 				$scope.logHorse = {username: '', password: '', lat: '', lon: ''};
@@ -125,7 +124,7 @@ appAuth.controller('authController', function($scope, $http, $location, currentU
 		delete $localStorage.currUser;
 		$scope.scope_current_user = "";
 		$scope.error_message = "";
-		$location.path('/register');
+		currentUserService.goSettings('signout');
 	};
 
 	// This checks for whether the user has a current session or not

@@ -15,7 +15,10 @@ var horseSchema = new Schema({
 	miles_away: String,
 	bio: String,
 	pictures: {
-		type: [String], 
+		type: [{
+			path: String,
+			pos: Number
+		}], 
 		validate: arrayLimit
 	},
 	birthday: Date,

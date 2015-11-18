@@ -55,6 +55,17 @@ router.route('/currHorse')
 		}, function(err, ahorse){
 			
 			ahorse.miles_away = "1 mile";
+			for (var i = 0; i<ahorse.pictures.length; i++){
+		    	if(ahorse.pictures[i].path !== "images/default.jpg"){
+		    		var orgFileName = ahorse.pictures[i].path;
+					var spot = orgFileName.lastIndexOf(".");
+				    var fileType = orgFileName.substr(spot);
+				    console.log(fileType);
+
+		    		ahorse.pictures[i].path = 'images/' + ahorse.pictures[i]._id + fileType;
+		    		console.log(ahorse.pictures[i].path);
+		    	}
+		    }
 			
 			return res.json(ahorse);
 		});
@@ -204,42 +215,175 @@ router.route('/images')
 		var str = req.files.file.originalFilename;
 		var n = str.lastIndexOf(".");
 	    var fileType = str.substr(n);
-
+	    console.log( req.body.pos)
 		var myName = 'images/' + req.body.theUser + "_" + req.body.pos + fileType;
-		var relPath = './public/' + myName;
+		
+		myName = {
+			path:  myName,
+			pos: req.body.pos
+		};
 		console.log(myName);
 
-		fs.rename(
-			req.files.file.path,
-			relPath,
-			function(error) {
-	            if(error) {
-			        return res.json("it broke");
-			    }
+		Horse.findOneAndUpdate({
+	    	_id: req.body.theUser
+	    },{
+	    	$push: {
+	    		pictures:{ 
+	    			$each:[myName],
+	    			$position: Math.abs(req.body.pos)
+	    		}
+	    	}
+	    },{
+	    	new: true
+	    }, function(err, doc){
+	    	if(err){
+	    		console.log(err)
+	    		return res.json("There was an error uploading your document");
+	    		//TODO: delete file from server.
+	    	}
+	    	console.log(doc.pictures[req.body.pos]._id);
+	    	var theFile = 'images/' + doc.pictures[req.body.pos]._id + fileType;
+	    	var relPath = './public/' + theFile;
+	    	fs.rename(
+				req.files.file.path,
+				relPath,
+				function(error) {
+		            if(error) {
+				        return res.json("it broke");
+				    }
+				    for (var i = 0; i<doc.pictures.length; i++){
+				    	if(doc.pictures[i].path !== "images/default.jpg"){
+				    		var orgFileName = doc.pictures[i].path;
+							var spot = orgFileName.lastIndexOf(".");
+						    var fileType = orgFileName.substr(spot);
+						    console.log(fileType);
 
-			    Horse.findOneAndUpdate({
-			    	_id: req.body.theUser
-			    },{
-			    	$push: {
-			    		pictures:{ 
-			    			$each:[myName],
-			    			$position: Math.abs(req.body.pos)
-			    		}
-			    	}
-			    },{
-			    	new: true
-			    }, function(err, doc){
-			    	if(err){
-			    		console.log(err)
-			    		return res.json("There was an error uploading your document");
-			    		//TODO: delete file from server.
-			    	}
-			    	console.log(doc);
-			    	return res.json("Your picture has been uploaded succesfully!");
-			    });
+				    		doc.pictures[i].path = 'images/' + doc.pictures[i]._id + fileType;
+				    		console.log(doc.pictures[i].path);
+				    	}
+				    }
+				    return res.json(doc.pictures);
+				}
+		    );
+	    	
+	    });
+
+		
+
+		// fs.rename(
+		// 	req.files.file.path,
+		// 	relPath,
+		// 	function(error) {
+	 //            if(error) {
+		// 	        return res.json("it broke");
+		// 	    }
+
+		// 	    Horse.findOneAndUpdate({
+		// 	    	_id: req.body.theUser
+		// 	    },{
+		// 	    	$push: {
+		// 	    		pictures:{ 
+		// 	    			$each:[myName],
+		// 	    			$position: Math.abs(req.body.pos)
+		// 	    		}
+		// 	    	}
+		// 	    },{
+		// 	    	new: true
+		// 	    }, function(err, doc){
+		// 	    	if(err){
+		// 	    		console.log(err)
+		// 	    		return res.json("There was an error uploading your document");
+		// 	    		//TODO: delete file from server.
+		// 	    	}
+		// 	    	console.log(doc);
+		// 	    	return res.json(doc.pictures);
+		// 	    });
+		// 	}
+	 //    );
+
+	})
+
+	.put(function(req, res){
+		console.log(req.body);
+		var relPath = './public/' + req.body.path;
+
+		var idAsPath = req.body.path;
+		var spot = idAsPath.lastIndexOf(".");
+	    var withOut_FileType = idAsPath.substr(0, spot);
+	    var spot = withOut_FileType.lastIndexOf("/");
+	    var justID = withOut_FileType.substr(spot+1);
+
+		fs.unlink(relPath, function(error){
+			if(error) {
+			    return res.json("it broke");
 			}
-	    );
+
+			Horse.findOneAndUpdate({
+				_id: req.body.user
+			},{
+				$pull: {pictures: {_id: justID}}
+			},{
+				new: true
+			}, function(err, doc){
+				if(err){
+		    		console.log(err)
+		    		return res.json("There was an error uploading your document");
+		    		//TODO: delete file from server.
+		    	}
+		    	console.log("Check 1");
+		    	console.log(doc.pictures);
+		    	for(var i = 0; i < doc.pictures.length; i++){
+		    		if(req.body.pos < doc.pictures[i].pos){
+		    			doc.pictures[i].pos--;
+		    			var str = doc.pictures[i].path;
+						var n = str.lastIndexOf(".") - 1;
+					    var first = str.substr(0,n);
+					    var num = Math.abs(str.substr(n,1)) - 1;
+					    var last = str.substr(n+1);
+					    doc.pictures[i].path = first + num + last;
+					    // var oldPath = './public/' + str;
+					    // var newPath = './public/' + doc.pictures[i].path;
+
+					  //   fs.rename(oldPath, newPath, function(err){
+					  //   	if(err) {
+							//     return res.json("it broke changing other files");
+							// }
+							// console.log(i);
+					  //   });
+		    		}
+		    	}
+		    	Horse.findOneAndUpdate({
+					_id: doc._id
+				},{
+					pictures: doc.pictures
+				},{
+					new: true
+				},function(aError, aDoc){
+					if(aError){
+						console.log("There is some error going on");
+						console.log(aError);
+						return res.json("There was an error changing other documents")
+					}
+
+				    for (var i = 0; i<aDoc.pictures.length; i++){
+				    	if(aDoc.pictures[i].path !== "images/default.jpg"){
+				    		var orgFileName = aDoc.pictures[i].path;
+							var spot = orgFileName.lastIndexOf(".");
+						    var fileType = orgFileName.substr(spot);
+						    console.log(fileType);
+
+				    		aDoc.pictures[i].path = 'images/' + aDoc.pictures[i]._id + fileType;
+				    		console.log(aDoc.pictures[i].path);
+				    	}
+				    }
+					
+					console.log(aDoc.pictures);
+					return res.json(aDoc.pictures);
+				});
+			});
+		});
 	});
+
 
 module.exports = router;
 

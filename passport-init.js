@@ -97,12 +97,15 @@ module.exports = function(passport){
 					newHorse.location = coords;
 					newHorse.gender = req.body.gender;
 					newHorse.age = req.body.age;
-					newHorse.pictures.push('images/default.jpg');
+					newHorse.pictures.push({
+						path: 'images/default.jpg',
+						pos: 0
+					});
 
 					// save the user
 					newHorse.save(function(err) {
 						if (err){
-							console.log('Error in Saving user: '+ err);  
+							console.log('Error in Saving user: '+ err);
 							throw err;  
 						}
 						console.log(newHorse.username + ' Registration succesful');    

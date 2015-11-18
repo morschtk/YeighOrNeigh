@@ -45,7 +45,11 @@ appHorse.controller('horseController', function($scope, $timeout, $http, $locati
 	  $http.put('/api/potentialHorses', $scope.userData).success(function(horseData, status){
 	  	$scope.horses = horseData;
 	  	$scope.horse = $scope.horses[0];
-
+		console.log($scope.horses[0]);
+		if($scope.horses[0] === undefined){
+			console.log("Display there are no horses in area");
+		};
+		$scope.pictures = $scope.horses[0].pictures[0].path;
 	  	$scope.horse.name = $scope.horses[0].username;
 	  	$scope.horse.bio = $scope.horses[0].bio;
 	  	$scope.horse.age = $scope.getAge($scope.horses[0].birthday);
