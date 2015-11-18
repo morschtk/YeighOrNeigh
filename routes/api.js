@@ -128,6 +128,7 @@ router.route('/potentialHorses')
 				}else{
 					result[i].miles_away = distArray[0] + " miles";
 				}
+				result[i].password = "";
 			}
 			return res.json(result);
 		}
@@ -341,15 +342,6 @@ router.route('/images')
 					    var num = Math.abs(str.substr(n,1)) - 1;
 					    var last = str.substr(n+1);
 					    doc.pictures[i].path = first + num + last;
-					    // var oldPath = './public/' + str;
-					    // var newPath = './public/' + doc.pictures[i].path;
-
-					  //   fs.rename(oldPath, newPath, function(err){
-					  //   	if(err) {
-							//     return res.json("it broke changing other files");
-							// }
-							// console.log(i);
-					  //   });
 		    		}
 		    	}
 		    	Horse.findOneAndUpdate({
@@ -376,7 +368,7 @@ router.route('/images')
 				    		console.log(aDoc.pictures[i].path);
 				    	}
 				    }
-					
+
 					console.log(aDoc.pictures);
 					return res.json(aDoc.pictures);
 				});

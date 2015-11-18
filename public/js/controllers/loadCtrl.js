@@ -70,7 +70,6 @@ appLoad.controller('loadController', function($scope, $http, $location, $localSt
 			currentUserService.setMaxAge(currHorse.settings.desired_age_max);
 
 			currentUserService.setBio(currHorse.bio);
-			console.log(currHorse.pictures);
 			currentUserService.setPics(currHorse.pictures);
 			// $localStorage.pictures = currHorse.pictures;
 			currentUserService.setName(currHorse.username);

@@ -27,7 +27,7 @@ var appSettings = angular.module("appSettings", ['ngMaterial', 'ngStorage', 'ngF
 	          			var place = div.id.slice (-1);
 	          			var last = Math.abs(place)+1;
 	          			var att = document.createAttribute('ng-click');
-	          			att.value = "unlink('" + place + "', dspPhotos[" + place + "])";
+	          			att.value = "unlink('" + place + "', dspPhotos[" + place + "], $event)";
 	        			div.setAttributeNode(att);
 	          		}
 	          	}
@@ -46,7 +46,7 @@ var appSettings = angular.module("appSettings", ['ngMaterial', 'ngStorage', 'ngF
 
 
 
-appSettings.controller('settingController',[ '$scope', 'Upload', '$timeout', '$http', '$location', '$route', 'potentialService', 'settingService', 'currentUserService', '$localStorage', function($scope, Upload, $timeout, $http, $location, $route, potentialService, settingService, currentUserService, $localStorage) {
+appSettings.controller('settingController',[ '$scope', '$mdDialog', 'Upload', '$timeout', '$http', '$location', '$route', 'potentialService', 'settingService', 'currentUserService', '$localStorage', function($scope, $mdDialog, Upload, $timeout, $http, $location, $route, potentialService, settingService, currentUserService, $localStorage) {
 
 	$scope.currUser = {};
 	var roundDist = currentUserService.getDesDist() * 0.00062137;
@@ -94,22 +94,36 @@ appSettings.controller('settingController',[ '$scope', 'Upload', '$timeout', '$h
 	};
 	$scope.generateImages();
 
-	$scope.unlink = function(pos, oldPath){
+	$scope.unlink = function(pos, oldPath, ev){
 		$scope.pos = pos;
 		$scope.oldPath = oldPath;
-		if($scope.oldPath !== 'images/add_user.png'){
-			var delData = {
-				user: $localStorage.currUser,
-				path: oldPath,
-				pos: $scope.pos
-			};
-			$http.put('/api/images', delData).success(function(data,status){
-				currentUserService.setPics(data);
-				$scope.generateImages();
-				$route.reload();
-			});
-		}
-	}
+
+		var confirm = $mdDialog.confirm()
+        	.title('Are you sure you want to delete this picture?')
+        	.ariaLabel('Delete picture')
+        	.targetEvent(ev)
+        	.ok('Please do it!')
+        	.cancel('No I fat fingered it..');
+
+	    $mdDialog.show(confirm).then(function() {
+	      // If the user wants to delete the picture run this code..
+	      if($scope.oldPath !== 'images/add_user.png'){
+	      	var delData = {
+	      		user: $localStorage.currUser,
+	      		path: oldPath,
+	      		pos: $scope.pos
+	      	};
+	      	$http.put('/api/images', delData).success(function(data,status){
+	      		currentUserService.setPics(data);
+	      		$scope.generateImages();
+	      		$route.reload();
+	      	});
+	      }
+	    }, function() {
+	      // If the user doesn't want to delete the picture run this code..
+	      console.log("Did Nothing");
+	    });	
+	};
 
 	$scope.upload = function(afile, pos) { 
 		$scope.pos = pos;
