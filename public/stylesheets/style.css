@@ -167,3 +167,7 @@ a {
   position: relative;
   
 }
+
+.nonDraggableImage{
+  -webkit-user-drag: none;
+}

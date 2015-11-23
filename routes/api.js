@@ -60,10 +60,8 @@ router.route('/currHorse')
 		    		var orgFileName = ahorse.pictures[i].path;
 					var spot = orgFileName.lastIndexOf(".");
 				    var fileType = orgFileName.substr(spot);
-				    console.log(fileType);
 
 		    		ahorse.pictures[i].path = 'images/' + ahorse.pictures[i]._id + fileType;
-		    		console.log(ahorse.pictures[i].path);
 		    	}
 		    }
 			
@@ -129,9 +127,23 @@ router.route('/potentialHorses')
 					result[i].miles_away = distArray[0] + " miles";
 				}
 				result[i].password = "";
+
+					for (var n = 0; n<result[i].pictures.length; n++){
+				    	if(result[i].pictures[n].path !== "images/default.jpg"){
+				    		var orgFileName = result[i].pictures[n].path;
+							var spot = orgFileName.lastIndexOf(".");
+						    var fileType = orgFileName.substr(spot);
+
+				    		result[i].pictures[n].path = 'images/' + result[i].pictures[n]._id + fileType;
+				    	}
+				    }
+
 			}
 			return res.json(result);
 		}
+
+			
+
 		});
 	});
 

@@ -1,8 +1,8 @@
-<div id="container" ng-if="userAuthenticated()">
+<div id="container" ng-if="userAuthenticated()" ng-cloak>
   <md-content class="content md-padding">
     
     <md-card ng-class="cssCard" ng-show="card">
-      <img ng-src="{{pictures}}" ng-click="showDetails()" class="md-card-image" alt="horse">
+        <img ng-src="{{pictures}}" md-swipe-left="onSwipeLeft($event)" md-swipe-right="onSwipeRight($event)" class="nonDraggableImage md-card-image" ng-click="showDetails()" alt="horse">
       <md-card-content class="cardContent">
         <h2 class="displayName md-headline">{{horse.name}}<span class="spanAge"> is {{horse.age}} years old.</span></h2>
         <div ng-show="details">

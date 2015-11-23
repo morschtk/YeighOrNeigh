@@ -15,6 +15,8 @@ appHorse.controller('horseController', function($scope, $timeout, $http, $locati
 	  $scope.mainDesDist = currentUserService.getDesDist();
 	  $scope.mainMinAge = currentUserService.getMinAge();
 	  $scope.mainMaxAge = currentUserService.getMaxAge();
+	  $scope.imagePos = 0;
+	  $scope.dontShow = false;
 
 	  $scope.userData = {
 	  	id: $scope.mainUser,
@@ -30,7 +32,7 @@ appHorse.controller('horseController', function($scope, $timeout, $http, $locati
 
 	  var today = new Date();
 	  $scope.card = true;
-	  $scope.details = false;	
+	  $scope.details = false;
 
 	  $scope.getAge = function(dateString) {
 	    var birthDate = new Date(dateString);
@@ -85,6 +87,7 @@ appHorse.controller('horseController', function($scope, $timeout, $http, $locati
 		$timeout(function(){
 			$scope.horse = $scope.horses[0];
 			$scope.horse.name = $scope.horses[0].username;
+			$scope.pictures = $scope.horses[0].pictures[0].path;
 		  	$scope.horse.bio = $scope.horses[0].bio;
 		  	$scope.horse.age = $scope.getAge($scope.horses[0].birthday);
 		  	$scope.milesAway = $scope.horses[0].miles_away.toString().split(".");
@@ -128,6 +131,7 @@ appHorse.controller('horseController', function($scope, $timeout, $http, $locati
 	  	$timeout(function(){
 	  		$scope.horse = $scope.horses[0];
 	  		$scope.horse.name = $scope.horses[0].username;
+	  		$scope.pictures = $scope.horses[0].pictures[0].path;
 		  	$scope.horse.bio = $scope.horses[0].bio;
 		  	$scope.horse.age = $scope.getAge($scope.horses[0].birthday);
 		  	$scope.milesAway = $scope.horses[0].miles_away.toString().split(".");
@@ -162,11 +166,44 @@ appHorse.controller('horseController', function($scope, $timeout, $http, $locati
 	  };
 
 	  $scope.showDetails = function(){
-	  	if($scope.details){
-	  		$scope.details = false;
-	  	}else{
-	  		$scope.details = true;
+	  	console.log("showDetails");
+	  	if(!$scope.dontShow){
+	  		if($scope.details){
+		  		$scope.details = false;
+		  	}else{
+		  		$scope.details = true;
+		  	}
 	  	}
+	  	$scope.dontShow = false;
 	  };
+
+	$scope.onSwipeLeft = function(ev) {
+		console.log("onSwipeLeft");
+		$scope.dontShow = true;
+
+		if($scope.details == false){
+			$scope.like($scope.horse)
+		}else{
+			if($scope.imagePos !== ($scope.horses[0].pictures.length-1)){
+				$scope.imagePos++;
+			}
+			$scope.pictures = $scope.horses[0].pictures[$scope.imagePos].path;
+		}
+    };
+
+    $scope.onSwipeRight = function(ev) {
+    	console.log("onSwipeRight");
+    	$scope.dontShow = true;
+
+		if($scope.details == false){
+			$scope.dislike($scope.horse)
+		}else{
+			if($scope.imagePos !== 0){
+				$scope.imagePos--;
+			}
+			$scope.pictures = $scope.horses[0].pictures[$scope.imagePos].path;
+		}
+    };
+    
   };
 });
