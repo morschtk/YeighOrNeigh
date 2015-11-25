@@ -1,6 +1,6 @@
 var appServices = angular.module("appServices", ['ngResource']);
 
-appServices.factory('currentUserService', function($location) {
+appServices.factory('currentUserService', function($location, $timeout) {
     var currUserCheck = undefined;
     var authUser = false;
     var settingsCheck = false;
@@ -16,6 +16,9 @@ appServices.factory('currentUserService', function($location) {
     var age = undefined;
     var miles = undefined;
     var timeAway = undefined;
+    var possible = true;
+    var matchPromise = null;
+    var potentialMatches = [];
     var arrLikes = [];
     var arrDislikes = [];
     var arrLikedBy = [];
@@ -23,10 +26,11 @@ appServices.factory('currentUserService', function($location) {
     var desGender = [];
 
     return {
-        goSettings: function(where){
+        goSettings: function(where, promise){
         console.log(where);
             switch(where){
                 case 'settings':
+                    $timeout.cancel(promise);
                     settingsCheck = true;
                     editCheck = false;
                     $location.path('/settings');
@@ -37,6 +41,7 @@ appServices.factory('currentUserService', function($location) {
                     $location.path('/');
                     break;
                 case 'signout':
+                    $timeout.cancel(promise);
                     settingsCheck = false;
                     editCheck = false;
                     $location.path('/register');
@@ -163,6 +168,24 @@ appServices.factory('currentUserService', function($location) {
         },
         setPics: function(value) {
             pictures = value;
+        },
+        getPossible: function(){
+            return possible;
+        },
+        setPossible: function(value) {
+            possible = value;
+        },
+        getpotentialMatches: function(){
+            return potentialMatches;
+        },
+        setpotentialMatches: function(value) {
+            potentialMatches = value;
+        },
+        getMatchesPromise: function(){
+            return matchPromise;
+        },
+        setMatchesPromise: function(value) {
+            matchPromise = value;
         }
     };
 });

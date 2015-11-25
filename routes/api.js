@@ -204,6 +204,7 @@ router.route('/settings/:id')
 			_id: req.params.id
 		},{
 			$set:{
+				bio: req.body.bio,
 				'settings.desired_distance': req.body.maxDistance,
 				'settings.desired_gender': req.body.desGender,
 				'settings.desired_age_min': req.body.minAge,

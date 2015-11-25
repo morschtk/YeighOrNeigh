@@ -19,7 +19,11 @@
         <h2 class="displayName md-headline">{{horse.name}}<span class="spanAge"> is {{horse.age}} years old.</span></h2>
         <div>
           <p>{{horse.distance}} away! Active {{horse.lastSeen}} ago.</p>
-          <p>{{horse.bio}}</p>
+          <p>{{currUser.bio}}</p>
+          <md-input-container class="md-block">
+            <label>Biography</label>
+            <textarea ng-model="currUser.bio" columns="1" md-maxlength="150" ng-blur="saveBio(currUser.bio)" rows="5"></textarea>
+          </md-input-container>
         </div>
       </md-card-content>
     </md-card>

@@ -16,6 +16,9 @@ appAuth.controller('authController', function($scope, $http, $location, currentU
 	$scope.editCheck = currentUserService.getEditCheck;
 	$scope.showLogInForm = true;
 
+	$scope.matchPromise = currentUserService.getMatchesPromise;
+	console.log($scope.matchPromise);
+
 	$scope.changeForm = function(which){
 		$scope.showLogInForm = which;
 	};
@@ -124,7 +127,7 @@ appAuth.controller('authController', function($scope, $http, $location, currentU
 		delete $localStorage.currUser;
 		$scope.scope_current_user = "";
 		$scope.error_message = "";
-		currentUserService.goSettings('signout');
+		currentUserService.goSettings('signout', $scope.matchPromise());
 	};
 
 	// This checks for whether the user has a current session or not

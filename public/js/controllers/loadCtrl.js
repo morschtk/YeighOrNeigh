@@ -2,6 +2,7 @@ var appLoad = angular.module("appLoad", ['ngMaterial', 'ngStorage']);
 
 appLoad.controller('loadController', function($scope, $http, $location, $localStorage, horseService, currentUserService, $timeout){
 	$scope.check = false;
+	$scope.possMatch = currentUserService.getPossible();
 
 	//FindandModify the current user update their current location and pull back data to then query for potential matches
 	//And to remove lat and lon from auth ctrl
@@ -73,10 +74,9 @@ appLoad.controller('loadController', function($scope, $http, $location, $localSt
 			currentUserService.setPics(currHorse.pictures);
 			// $localStorage.pictures = currHorse.pictures;
 			currentUserService.setName(currHorse.username);
+			$scope.currName = currentUserService.getName();
 			currentUserService.setAge($scope.getAge(currHorse.birthday));
 	  		currentUserService.setMiles(currHorse.miles_away);
-
-
 
 			var aDate = new Date(currHorse.last_logged);
 			var seconds = (today.getTime() - aDate.getTime())/1000;
@@ -105,24 +105,47 @@ appLoad.controller('loadController', function($scope, $http, $location, $localSt
 			}
 			currentUserService.setDesGender($scope.desGenderArr);
 
-			$timeout(function(){
-		  		$location.path('/home');
-			}, 750);
+			$scope.userData = {
+	  			id: $localStorage.currUser,
+	  			lon: currentUserService.getLon(),
+	  			lat: currentUserService.getLat(),
+	  			theLikes: currHorse.likes,
+	  			theDislikes: currHorse.dislikes,
+	  			theDesGender: $scope.desGenderArr,
+	  			theDesDist: currHorse.settings.desired_distance,
+	  			theMinAge: currHorse.settings.desired_age_min,
+	  			theMaxAge: currHorse.settings.desired_age_max
+	  		};
+	  		console.log($scope.userData);
+			$scope.getMatches();
+
 		});
 	};
 
-
-
-	$scope.signout = function(){
-		$http.get('/signout');
-		currentUserService.setAuth(false);
-		// $scope.userAuthenticated = false;
-		// currentUserService.setUser("");
-		delete $localStorage.currUser;
-		$scope.scope_current_user = "";
-		$scope.error_message = "";
-		$location.path('/register');
+	$scope.getMatches = function(){
+		$http.put('/api/potentialHorses', $scope.userData).success(function(horseData, status){
+			console.log(horseData);
+			if(horseData.length < 1){
+				//Display no possible messages to user
+				currentUserService.setPossible(false);
+				$scope.possMatch = false;
+				$scope.getMatchesPromise = $timeout(function(){
+			  		$scope.getMatches();
+				}, 7000);
+				currentUserService.setMatchesPromise($scope.getMatchesPromise);
+			}else{
+				//Go to main page
+				console.log(horseData);
+				$timeout.cancel($scope.getMatchesPromise);
+				currentUserService.setMatchesPromise(null);
+				currentUserService.setpotentialMatches(horseData);
+				$timeout(function(){
+			  		$location.path('/home');
+				}, 750);
+			}
+		});
 	};
+
 
 	if($localStorage.currUser !== undefined){
 		$scope.checkLocation();

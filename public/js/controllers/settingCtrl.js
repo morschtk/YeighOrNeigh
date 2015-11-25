@@ -69,6 +69,7 @@ appSettings.controller('settingController',[ '$scope', '$mdDialog', 'Upload', '$
 	}
 	$scope.currUser.minAge = currentUserService.getMinAge();
 	$scope.currUser.maxAge = currentUserService.getMaxAge();
+	$scope.currUser.bio = currentUserService.getBio();
 	$scope.range = $scope.currUser.minAge + ' - ' + $scope.currUser.maxAge;	
 
 	$scope.horse = {};
@@ -149,6 +150,11 @@ appSettings.controller('settingController',[ '$scope', '$mdDialog', 'Upload', '$
         });	      
     };
 
+    $scope.saveBio = function(){
+    	$scope.currUser.maxDistance = ($scope.currUser.maxDistance / 0.00062137);
+		settingService.update({id: $localStorage.currUser}, $scope.currUser);
+    }
+
 	$scope.changeAge = function(id, num){
 		if($scope.currUser.minAge > ($scope.currUser.maxAge-4)){
 			switch(id){
@@ -168,6 +174,7 @@ appSettings.controller('settingController',[ '$scope', '$mdDialog', 'Upload', '$
 	$scope.saveSettings = function(){
 		$scope.currUser.maxDistance = ($scope.currUser.maxDistance / 0.00062137);
 		settingService.update({id: $localStorage.currUser}, $scope.currUser);
+		currentUserService.setPossible(true);
 		currentUserService.goSettings('home');
 	};
 

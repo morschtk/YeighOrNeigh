@@ -29,7 +29,7 @@
   <body layout="column" ng-controller="authController">
   	<md-toolbar layout="row" ng-if="!settingsCheck() && !editCheck()" layout-align="space-around center">
 
-      <ng-md-icon ng-click="goSettings('settings')" ng-if="userAuthenticated()" icon="settings_applications" style="fill: #fff; height: 45px;" size="2.25em"></ng-md-icon>
+      <ng-md-icon ng-click="goSettings('settings', matchPromise())" ng-if="userAuthenticated()" icon="settings_applications" style="fill: #fff; height: 45px;" size="2.25em"></ng-md-icon>
 
   		<h3 class="title md-headline">Yeigh or Neigh</h3>
 
@@ -44,7 +44,7 @@
       <ng-md-icon icon="settings_applications" style="fill: #fff; height: 45px;" size="2.25em"></ng-md-icon>
 
       <!-- <ng-md-icon ng-click="goSettings(false)" icon="arrow_forward" style="fill: #fff; height: 40px;" size="2em"></ng-md-icon> -->
-      <ng-md-icon ng-click="goSettings('home')" icon="navigate_next" style="fill: #fff; height: 40px;" size="2em"></ng-md-icon>
+      <ng-md-icon ng-click="goSettings('home', matchPromise())" icon="navigate_next" style="fill: #fff; height: 40px;" size="2em"></ng-md-icon>
 
     </md-toolbar>
 
@@ -54,7 +54,7 @@
 
       <h5 class="title md-subtitle">Edit Info</h5>
 
-      <h5 class="title md-subtitle" ng-click="goSettings('home')">Done</h5>
+      <h5 class="title md-subtitle" ng-click="goSettings('home', matchPromise())">Done</h5>
 
     </md-toolbar>
 

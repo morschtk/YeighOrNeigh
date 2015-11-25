@@ -1,11 +1,17 @@
-<div id="container">
+<div id="container" ng-cloak>
   <md-content class="content md-padding">
-    <md-card>
-    	<div layout="row" layout-sm="column" layout-align="space-around">
-	      <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+    <md-card class="md-padding">
+    	<div layout="row" layout-padding layout-margin  layout-align="space-around">
+	      <md-progress-circular md-mode="indeterminate" md-diameter="96"></md-progress-circular>
 	    </div>
+	    <md-card-content ng-if="!possMatch">
+		    <h2 class="displayName md-headline">{{currName}}</h2>
+		    <div>
+		      <p>There are currently no horses within your desired distance.</p>
+		      <p>Please increase your distance or try again later.</p>
+		    </div>
+	    </md-card-content>
     </md-card>
-    <md-button ng-click="signout()" class="md-raised md-warn">Sign out</md-button>
   </md-content>
 </div>
 

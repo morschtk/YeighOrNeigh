@@ -7,12 +7,12 @@
         <h2 class="displayName md-headline">{{horse.name}}<span class="spanAge"> is {{horse.age}} years old.</span></h2>
         <div ng-show="details">
           <p>{{horse.distance}} away! Active {{horse.lastSeen}} ago.</p>
-          <p>{{horse.bio}}{{pictures}}</p>
+          <p>{{horse.bio}}</p>
         </div>
       </md-card-content>
       <div class="md-actions" layout="row" layout-align="space-around center">
-        <md-button ng-click="cssCard='dislike'; dislike(horse);">UGLY..</md-button>
-        <md-button ng-click="cssCard='like'; like(horse);">SHIT YEAH!</md-button>
+        <md-button ng-click="cssCard='dislike'; dislike(horse);">Neigh</md-button>
+        <md-button ng-click="cssCard='like'; like(horse);">Yeigh</md-button>
       </div>
     </md-card>
     <md-button ng-click="signout()" class="md-raised md-warn">Sign out</md-button>
