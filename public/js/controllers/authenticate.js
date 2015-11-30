@@ -12,12 +12,11 @@ appAuth.controller('authController', function($scope, $http, $location, currentU
 	$scope.error_birthday = "";
 	$scope.goSettings = currentUserService.goSettings;
 	$scope.settingsCheck = currentUserService.getSettingsCheck;
-	$scope.goEdit = currentUserService.goEdit;
 	$scope.editCheck = currentUserService.getEditCheck;
+	$scope.matchCheck = currentUserService.getMatchCheck;
 	$scope.showLogInForm = true;
 
 	$scope.matchPromise = currentUserService.getMatchesPromise;
-	console.log($scope.matchPromise);
 
 	$scope.changeForm = function(which){
 		$scope.showLogInForm = which;

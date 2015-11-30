@@ -1,0 +1,22 @@
+<div id="container"  ng-cloak>
+    
+    <md-card ng-class="cssCard" >
+      <md-card-content class="cardContent">
+        <md-list>
+          <h3 class="md-no-sticky md-headline">{{currName()}}'s matches</h3>
+          <md-list-item ng-repeat="person in people" ng-click="goToPerson(person._horse.username, $event)" ng-class-odd="'odd'" ng-class-even="'even'">
+            <img alt="{{ person._horse.username }}" ng-src="{{ person._horse.pictures[0].path }}" class="md-avatar" />
+            <div class="md-list-item-text" layout="column">
+              <h2 class="matchName" style="margin-bottom: 0px;">{{ person._horse.username }}</h2>
+              <p class="matchMessage" ng-if="person.messages[0].message !== undefined" >{{person.messages[0].message}}</p>
+              <p class="matchMessage" ng-if="person.messages[0].message == undefined">Don't be shy say something!</p>
+            </div>
+            <!-- <md-icon md-svg-icon="communication:messenger" ng-click="doSecondaryAction($event)" aria-label="Open Chat" class="md-secondary md-hue-3" ng-class="{'md-primary': person.newMessage}"></md-icon> -->
+          </md-list-item>
+
+          <md-divider></md-divider>
+        </md-list>
+      </md-card-content>
+    </md-card>
+
+</div>

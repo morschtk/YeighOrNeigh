@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var mongoose = require('mongoose');
 var Horse = mongoose.model('Horse');
+var Match = mongoose.model('Match');
 var connectMongo = require("connect-mongo");
 var fs = require('fs');
 
@@ -182,19 +183,81 @@ router.route('/like/:id')
 				return res.json(err);
 			}
 		});
-		//Add the current user to the likedBy array of the liked user
-		Horse.findOneAndUpdate({
-			_id: req.body.id
-		},{
-			$push: { likedBy: req.params.id }
-		},{
-			upsert: true
-		},
-		function(err){
+
+		Horse.find({ 
+			$and: [
+				{ _id: req.body.id},
+				{ likes: req.params.id}
+			]
+		}, function(err, doc){
 			if(err){
-				return res.json(err);
+				console.log("Error liking the user");
+				console.log(err);
 			}
-			return res.json("liked")
+			console.log(doc);
+			if (doc.length == 0) {
+				console.log("no match");
+				var matchStats = {
+					message: false
+				};
+				return res.json(matchStats);
+
+			} else if(doc.length == 1){
+				console.log("Its a MaTCh!!!");
+
+				//insert into match collection
+				var aMatch = new Match();
+
+				aMatch.users = [req.params.id, req.body.id];
+				console.log(aMatch);
+
+				aMatch.save(function(err){
+					if(err){
+						console.log("There was an error creating the match");
+						console.log(err);
+						return res.json("error creating match");
+					}
+
+					var matchedOther = {
+						_horse: req.params.id,
+						_match: aMatch._id,
+					}
+//push matched object to other user
+					Horse.findOneAndUpdate({
+						_id: req.body.id
+					},{
+						$push:{ matched: matchedOther }
+					},function(err, aDoc){
+						if(err){
+							console.log("There was an error pushing matched object to other user");
+						}
+					});
+
+					var matchedCurr = {
+						_horse: req.body.id,
+						_match: aMatch._id,
+					}
+
+					Horse.findOneAndUpdate({
+						_id: req.params.id
+					},{
+						$push:{ matched: matchedCurr }
+					},{
+						new: true
+					},function(err, currHorse){
+						if(err){
+							console.log("There was an error pushing matched object to current user");
+						}
+
+						console.log("It's a Match!!");
+						var matchStats = {
+							message: true,
+							horse: currHorse
+						};
+						return res.json(matchStats);
+					});
+				});
+			}
 		});
 	});
 
@@ -218,18 +281,11 @@ router.route('/settings/:id')
 		});
 	});
 
-
-
 router.route('/images')
 	.post(function(req, res){
-		console.log("HERE!!!!!");
-		console.log(req.body);
-		console.log(req.files);
-
 		var str = req.files.file.originalFilename;
 		var n = str.lastIndexOf(".");
 	    var fileType = str.substr(n);
-	    console.log( req.body.pos)
 		var myName = 'images/' + req.body.theUser + "_" + req.body.pos + fileType;
 		
 		myName = {
@@ -253,7 +309,6 @@ router.route('/images')
 	    	if(err){
 	    		console.log(err)
 	    		return res.json("There was an error uploading your document");
-	    		//TODO: delete file from server.
 	    	}
 	    	console.log(doc.pictures[req.body.pos]._id);
 	    	var theFile = 'images/' + doc.pictures[req.body.pos]._id + fileType;
@@ -282,43 +337,9 @@ router.route('/images')
 	    	
 	    });
 
-		
-
-		// fs.rename(
-		// 	req.files.file.path,
-		// 	relPath,
-		// 	function(error) {
-	 //            if(error) {
-		// 	        return res.json("it broke");
-		// 	    }
-
-		// 	    Horse.findOneAndUpdate({
-		// 	    	_id: req.body.theUser
-		// 	    },{
-		// 	    	$push: {
-		// 	    		pictures:{ 
-		// 	    			$each:[myName],
-		// 	    			$position: Math.abs(req.body.pos)
-		// 	    		}
-		// 	    	}
-		// 	    },{
-		// 	    	new: true
-		// 	    }, function(err, doc){
-		// 	    	if(err){
-		// 	    		console.log(err)
-		// 	    		return res.json("There was an error uploading your document");
-		// 	    		//TODO: delete file from server.
-		// 	    	}
-		// 	    	console.log(doc);
-		// 	    	return res.json(doc.pictures);
-		// 	    });
-		// 	}
-	 //    );
-
 	})
 
 	.put(function(req, res){
-		console.log(req.body);
 		var relPath = './public/' + req.body.path;
 
 		var idAsPath = req.body.path;
@@ -344,8 +365,6 @@ router.route('/images')
 		    		return res.json("There was an error uploading your document");
 		    		//TODO: delete file from server.
 		    	}
-		    	console.log("Check 1");
-		    	console.log(doc.pictures);
 		    	for(var i = 0; i < doc.pictures.length; i++){
 		    		if(req.body.pos < doc.pictures[i].pos){
 		    			doc.pictures[i].pos--;
@@ -390,6 +409,32 @@ router.route('/images')
 	});
 
 
+router.route('/matches/:id')
+	.get(function(req,res){
+		Horse.findOne({
+			_id: req.params.id
+		}).populate('matched._horse')
+		.populate('matched._match')
+		.exec(function(err, currHorse){
+			if(err){
+				console.log(err);
+				return "There was an error getting your matches";
+			}
+		    for (var i = 0; i< currHorse.matched.length; i++){
+		    	if(currHorse.matched[i]._horse.pictures[0].path !== "images/default.jpg"){
+		    		var orgFileName = currHorse.matched[i]._horse.pictures[0].path;
+					var spot = orgFileName.lastIndexOf(".");
+				    var fileType = orgFileName.substr(spot);
+
+		    		currHorse.matched[i]._horse.pictures.path = 'images/' + currHorse.matched[i]._horse.pictures[0]._id + fileType;
+		    	}else{
+		    		currHorse.matched[i]._horse.pictures.path = "images/default.jpg";
+		    	}
+		    }
+			return res.json(currHorse);
+		})
+	});
+
+
+
 module.exports = router;
-
-

@@ -116,7 +116,6 @@ appLoad.controller('loadController', function($scope, $http, $location, $localSt
 	  			theMinAge: currHorse.settings.desired_age_min,
 	  			theMaxAge: currHorse.settings.desired_age_max
 	  		};
-	  		console.log($scope.userData);
 			$scope.getMatches();
 
 		});
@@ -124,7 +123,6 @@ appLoad.controller('loadController', function($scope, $http, $location, $localSt
 
 	$scope.getMatches = function(){
 		$http.put('/api/potentialHorses', $scope.userData).success(function(horseData, status){
-			console.log(horseData);
 			if(horseData.length < 1){
 				//Display no possible messages to user
 				currentUserService.setPossible(false);
@@ -135,7 +133,6 @@ appLoad.controller('loadController', function($scope, $http, $location, $localSt
 				currentUserService.setMatchesPromise($scope.getMatchesPromise);
 			}else{
 				//Go to main page
-				console.log(horseData);
 				$timeout.cancel($scope.getMatchesPromise);
 				currentUserService.setMatchesPromise(null);
 				currentUserService.setpotentialMatches(horseData);

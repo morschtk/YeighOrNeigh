@@ -171,3 +171,26 @@ a {
 .nonDraggableImage{
   -webkit-user-drag: none;
 }
+
+.odd {
+  background: #B8B8B8;
+}
+
+.even {
+  background-color: #fff;
+}
+
+md-list.md-default-theme md-list-item button{
+  background-color: inherit;
+}
+
+.matchName{
+  margin-top: .3em;
+  margin-bottom: 0px;
+  line-height: 1.2em;
+}
+
+.matchMessage{
+  margin-top: 0px;
+  margin-bottom: .3em;
+}

@@ -5,6 +5,7 @@ appServices.factory('currentUserService', function($location, $timeout) {
     var authUser = false;
     var settingsCheck = false;
     var editCheck = false;
+    var matchCheck = false;
     var userBio = undefined;
     var userLat = undefined;
     var userLon = undefined;
@@ -33,22 +34,33 @@ appServices.factory('currentUserService', function($location, $timeout) {
                     $timeout.cancel(promise);
                     settingsCheck = true;
                     editCheck = false;
+                    matchCheck = false;
                     $location.path('/settings');
+                    break;
+                case 'matches':
+                    $timeout.cancel(promise);
+                    settingsCheck = false;
+                    editCheck = false;
+                    matchCheck = true;
+                    $location.path('/matches');
                     break;
                 case 'home':
                     settingsCheck = false;
                     editCheck = false;
+                    matchCheck = false;
                     $location.path('/');
                     break;
                 case 'signout':
                     $timeout.cancel(promise);
                     settingsCheck = false;
                     editCheck = false;
+                    matchCheck = false;
                     $location.path('/register');
                     break;
                 case 'edit':
                     settingsCheck = false;
                     editCheck = true;
+                    matchCheck = false;
                     $location.path('/editProfile');
                     break;
                 default:
@@ -60,6 +72,9 @@ appServices.factory('currentUserService', function($location, $timeout) {
         },
         getEditCheck: function() {
             return editCheck;
+        },
+        getMatchCheck: function() {
+            return matchCheck;
         },
         getCheck: function() {
             return currUserCheck;
@@ -220,6 +235,13 @@ appServices.factory('likeService',['$resource', function($resource){
 
 appServices.factory('settingService',['$resource', function($resource){
     return $resource('/api/settings/:id', null,
+        {
+            'update': {method:'put'}
+    });
+}]);
+
+appServices.factory('matchesService',['$resource', function($resource){
+    return $resource('/api/matches/:id', null,
         {
             'update': {method:'put'}
     });

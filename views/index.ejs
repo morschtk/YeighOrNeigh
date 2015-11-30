@@ -27,13 +27,13 @@
     
   </head>
   <body layout="column" ng-controller="authController">
-  	<md-toolbar layout="row" ng-if="!settingsCheck() && !editCheck()" layout-align="space-around center">
+  	<md-toolbar layout="row" ng-if="!settingsCheck() && !editCheck() && !matchCheck()" layout-align="space-around center">
 
       <ng-md-icon ng-click="goSettings('settings', matchPromise())" ng-if="userAuthenticated()" icon="settings_applications" style="fill: #fff; height: 45px;" size="2.25em"></ng-md-icon>
 
   		<h3 class="title md-headline">Yeigh or Neigh</h3>
 
-      <ng-md-icon ng-if="userAuthenticated()" icon="messenger" style="fill: #fff; height: 40px;" size="2em"></ng-md-icon>
+      <ng-md-icon ng-click="goSettings('matches', matchPromise())" ng-if="userAuthenticated()" icon="messenger" style="fill: #fff; height: 40px;" size="2em"></ng-md-icon>
 
     </md-toolbar>
 
@@ -58,6 +58,16 @@
 
     </md-toolbar>
 
+    <md-toolbar layout="row" ng-if="matchCheck()" layout-align="space-around center" >
+  
+      <ng-md-icon ng-click="goSettings('home', matchPromise())" icon="navigate_before" style="fill: #fff; height: 40px;" size="2em"></ng-md-icon>
+
+      <ng-md-icon icon="messenger" style="fill: #fff; height: 40px;" size="2em"></ng-md-icon>
+
+      <h3 class="title md-headline">&nbsp;</h3>
+
+    </md-toolbar>
+
   	<div ng-view ></div>
 
      <script src="js/services/service.js"></script>
@@ -65,6 +75,7 @@
    
     <script src="js/controllers/authenticate.js"></script>
     <script src="js/controllers/mainHorse.js"></script>
+    <script src="js/controllers/matchCtrl.js"></script>
     <script src="js/controllers/loadCtrl.js"></script>
     <script src="js/controllers/settingCtrl.js"></script>
   </body>
