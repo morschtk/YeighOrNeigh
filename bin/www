@@ -7,6 +7,8 @@
 var app = require('../app');
 var debug = require('debug')('HorseTinder:server');
 var http = require('http');
+var io = require('socket.io');
+var socketHelper = require('../routes/socket.js');
 
 /**
  * Get port from environment and store in Express.
@@ -20,6 +22,16 @@ app.set('port', port);
  */
 
 var server = http.createServer(app);
+
+var io = io.listen(server);
+
+// Socket.io Communication
+io.sockets.on('connection', function(socket) {
+  socketHelper.addUser(socket);
+  socketHelper.sendMessage(socket, io);
+  socketHelper.leave(socket);
+  socketHelper.disconnect(socket);
+});
 
 /**
  * Listen on provided port, on all network interfaces.

@@ -1,0 +1,23 @@
+<div id="container" layout="column" flex ng-cloak>
+  <md-list flex>
+    <md-list-item ng-repeat="message in messages" class="md-2-line">
+      <img ng-src="{{message.picture}}" class="md-avatar" alt="{{message.picture}}" />
+      <div class="md-list-item-text">
+        <h3>{{message.displayName}}</h3>
+        <p>{{message.text}}</p>
+      </div>
+    </md-list-item>
+  </md-list>
+
+  <md-content layout="row"  id="chatForm">
+      <form name="chatForm" layout="row" flex ng-submit="sendMessage()">
+        <div layout="row" flex>
+          <md-input-container flex="66">
+            <label>Say Something!</label>
+            <input ng-model="message">
+          </md-input-container>
+          <md-button type="submit" flex="33" class="md-raised md-primary">Send</md-button>
+        </div>
+      </form>
+  </md-content>
+</div>

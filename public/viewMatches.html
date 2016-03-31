@@ -1,10 +1,10 @@
 <div id="container"  ng-cloak>
-    
+
     <md-card ng-class="cssCard" >
       <md-card-content class="cardContent">
         <md-list>
           <h3 class="md-no-sticky md-headline">{{currName()}}'s matches</h3>
-          <md-list-item ng-repeat="person in people" ng-click="goToPerson(person._horse.username, $event)" ng-class-odd="'odd'" ng-class-even="'even'">
+          <md-list-item ng-repeat="person in people" ng-click="goToPerson(person, $event)" ng-class-odd="'odd'" ng-class-even="'even'">
             <img alt="{{ person._horse.username }}" ng-src="{{ person._horse.pictures[0].path }}" class="md-avatar" />
             <div class="md-list-item-text" layout="column">
               <h2 class="matchName" style="margin-bottom: 0px;">{{ person._horse.username }}</h2>

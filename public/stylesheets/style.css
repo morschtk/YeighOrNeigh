@@ -157,6 +157,10 @@ a {
   color: #656565; 
 }
 
+#chatForm md-input-container:not(.md-input-invalid) > label{
+  color: #656565; 
+}
+
 .pointer{
   cursor: pointer;
 }
@@ -193,4 +197,9 @@ md-list.md-default-theme md-list-item button{
 .matchMessage{
   margin-top: 0px;
   margin-bottom: .3em;
+}
+
+#chatForm{
+  overflow: hidden;
+  bottom: 0;
 }

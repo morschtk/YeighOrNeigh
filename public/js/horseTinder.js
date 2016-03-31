@@ -1,4 +1,4 @@
-var app = angular.module('horseTinder', ['ngMaterial', 'ngRoute', 'ngFileUpload', 'appHorse', 'appSettings', 'appAuth', 'appLoad', 'appMatch', 'appServices', 'ngMdIcons']);
+var app = angular.module('horseTinder', ['ngMaterial', 'ngRoute', 'ngFileUpload', 'appHorse', 'appSettings', 'appAuth', 'appLoad', 'appMatch', 'appChat', 'appServices', 'ngMdIcons']);
 
 app.config(function($routeProvider){
 	$routeProvider
@@ -18,6 +18,12 @@ app.config(function($routeProvider){
       templateUrl: '/viewMatches.html',
       controller: 'matchController',
       controlleras: 'matchCtrl'
+    })
+
+    .when('/chat', {
+      templateUrl: '/chatRoom.html',
+      controller: 'chatController',
+      controlleras: 'chatCtrl'
     })
 
     .when('/settings', {

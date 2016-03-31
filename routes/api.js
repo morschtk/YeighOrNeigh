@@ -8,7 +8,7 @@ var fs = require('fs');
 
 //Used for routes that must be authenticated.
 function isAuthenticated (req, res, next) {
-	// if user is authenticated in the session, call the next() to call the next request handler 
+	// if user is authenticated in the session, call the next() to call the next request handler
 	// Passport adds this method to request object. A middleware is allowed to add properties to
 	// request and response objects
 
@@ -34,11 +34,11 @@ router.use('/horses', isAuthenticated);
 		function calculateDistance(lat1, lon1, lat2, lon2) {
 		  var R = 3961; //miles		//6371; // km
 		  var dLat = toRad((lat2 - lat1));
-		  var dLon = toRad((lon2 - lon1)); 
+		  var dLon = toRad((lon2 - lon1));
 		  var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-		          Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * 
-		          Math.sin(dLon / 2) * Math.sin(dLon / 2); 
-		  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)); 
+		          Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+		          Math.sin(dLon / 2) * Math.sin(dLon / 2);
+		  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 		  var d = R * c;
 		  return d;
 		}
@@ -54,7 +54,7 @@ router.route('/currHorse')
 		},{
 			new: true
 		}, function(err, ahorse){
-			
+
 			ahorse.miles_away = "1 mile";
 			for (var i = 0; i<ahorse.pictures.length; i++){
 		    	if(ahorse.pictures[i].path !== "images/default.jpg"){
@@ -65,7 +65,7 @@ router.route('/currHorse')
 		    		ahorse.pictures[i].path = 'images/' + ahorse.pictures[i]._id + fileType;
 		    	}
 		    }
-			
+
 			return res.json(ahorse);
 		});
 	});
@@ -73,7 +73,7 @@ router.route('/currHorse')
 				// potentialService
 router.route('/potentialHorses')
 //gets all horses that match the current users search criteria
-	.put(function(req, res){		
+	.put(function(req, res){
 
 		// $maxDistance is in meters, convert to miles
 		Horse.find( { $and: [{ location :
@@ -82,30 +82,30 @@ router.route('/potentialHorses')
 		             { type : "Point" ,
 		               coordinates : [  req.body.lon , req.body.lat ] } ,
 		        	   $maxDistance : req.body.theDesDist //17702.8
-		   		  } 
-		      	} 
-	      	},{ 
-	      		_id: { 
-	      			$nin: req.body.theLikes 
+		   		  }
+		      	}
+	      	},{
+	      		_id: {
+	      			$nin: req.body.theLikes
 	      		}
-	      	},{ 
-	      		_id: { 
-	      			$nin: req.body.theDislikes 
+	      	},{
+	      		_id: {
+	      			$nin: req.body.theDislikes
 	      		}
-	      	},{ 
-	      		gender: { 
+	      	},{
+	      		gender: {
 	      			$in: req.body.theDesGender
 	      		}
-	      	},{ 
-	      		age: { 
-	      			$lte: req.body.theMaxAge 
+	      	},{
+	      		age: {
+	      			$lte: req.body.theMaxAge
 	      		}
-	      	},{ 
-	      		age: { 
-	      			$gte: req.body.theMinAge 
+	      	},{
+	      		age: {
+	      			$gte: req.body.theMinAge
 	      		}
 	      	}
-	    ]} , function(err, result) { 
+	    ]} , function(err, result) {
 	    	if(err){
 	    		console.log(err);
 	    		var aError = {
@@ -117,7 +117,7 @@ router.route('/potentialHorses')
 	    			message: "There are no horses in your area at this time..."
 	    		};
 	    		return res.json(noResults);
-	    	}else{  
+	    	}else{
 			for(var i = 0; i < result.length; i++){
 				var theDistance = calculateDistance(req.body.lat, req.body.lon, result[i].location[1], result[i].location[0]);
 				//Round distance
@@ -143,7 +143,7 @@ router.route('/potentialHorses')
 			return res.json(result);
 		}
 
-			
+
 
 		});
 	});
@@ -184,7 +184,7 @@ router.route('/like/:id')
 			}
 		});
 
-		Horse.find({ 
+		Horse.find({
 			$and: [
 				{ _id: req.body.id},
 				{ likes: req.params.id}
@@ -194,22 +194,16 @@ router.route('/like/:id')
 				console.log("Error liking the user");
 				console.log(err);
 			}
-			console.log(doc);
 			if (doc.length == 0) {
-				console.log("no match");
 				var matchStats = {
 					message: false
 				};
 				return res.json(matchStats);
 
-			} else if(doc.length == 1){
-				console.log("Its a MaTCh!!!");
-
+			} else if (doc.length == 1) {
 				//insert into match collection
 				var aMatch = new Match();
-
 				aMatch.users = [req.params.id, req.body.id];
-				console.log(aMatch);
 
 				aMatch.save(function(err){
 					if(err){
@@ -249,7 +243,6 @@ router.route('/like/:id')
 							console.log("There was an error pushing matched object to current user");
 						}
 
-						console.log("It's a Match!!");
 						var matchStats = {
 							message: true,
 							horse: currHorse
@@ -287,18 +280,17 @@ router.route('/images')
 		var n = str.lastIndexOf(".");
 	    var fileType = str.substr(n);
 		var myName = 'images/' + req.body.theUser + "_" + req.body.pos + fileType;
-		
+
 		myName = {
 			path:  myName,
 			pos: req.body.pos
 		};
-		console.log(myName);
 
 		Horse.findOneAndUpdate({
 	    	_id: req.body.theUser
 	    },{
 	    	$push: {
-	    		pictures:{ 
+	    		pictures:{
 	    			$each:[myName],
 	    			$position: Math.abs(req.body.pos)
 	    		}
@@ -310,7 +302,6 @@ router.route('/images')
 	    		console.log(err)
 	    		return res.json("There was an error uploading your document");
 	    	}
-	    	console.log(doc.pictures[req.body.pos]._id);
 	    	var theFile = 'images/' + doc.pictures[req.body.pos]._id + fileType;
 	    	var relPath = './public/' + theFile;
 	    	fs.rename(
@@ -325,16 +316,13 @@ router.route('/images')
 				    		var orgFileName = doc.pictures[i].path;
 							var spot = orgFileName.lastIndexOf(".");
 						    var fileType = orgFileName.substr(spot);
-						    console.log(fileType);
-
 				    		doc.pictures[i].path = 'images/' + doc.pictures[i]._id + fileType;
-				    		console.log(doc.pictures[i].path);
 				    	}
 				    }
 				    return res.json(doc.pictures);
 				}
 		    );
-	    	
+
 	    });
 
 	})
@@ -389,19 +377,15 @@ router.route('/images')
 						return res.json("There was an error changing other documents")
 					}
 
-				    for (var i = 0; i<aDoc.pictures.length; i++){
-				    	if(aDoc.pictures[i].path !== "images/default.jpg"){
-				    		var orgFileName = aDoc.pictures[i].path;
-							var spot = orgFileName.lastIndexOf(".");
-						    var fileType = orgFileName.substr(spot);
-						    console.log(fileType);
+			    for (var i = 0; i<aDoc.pictures.length; i++){
+			    	if(aDoc.pictures[i].path !== "images/default.jpg"){
+			    		var orgFileName = aDoc.pictures[i].path;
+						var spot = orgFileName.lastIndexOf(".");
+					    var fileType = orgFileName.substr(spot);
+			    		aDoc.pictures[i].path = 'images/' + aDoc.pictures[i]._id + fileType;
+			    	}
+			    }
 
-				    		aDoc.pictures[i].path = 'images/' + aDoc.pictures[i]._id + fileType;
-				    		console.log(aDoc.pictures[i].path);
-				    	}
-				    }
-
-					console.log(aDoc.pictures);
 					return res.json(aDoc.pictures);
 				});
 			});
@@ -435,6 +419,57 @@ router.route('/matches/:id')
 		})
 	});
 
+router.route('/messages/:id')
+	.get(function(req, res) {
+		Match.findOne({
+			_id: req.params.id
+		}).populate('users')
+		.exec(function(err, theMatch) {
+			if (err) {
+				console.log(err);
+				return "There was an error getting this match";
+			}
+			var theMessages = [];
+			for (var i = 0; i < theMatch.messages.length; i++) {
+				if (theMatch.messages[i].created_by.toString() == theMatch.users[0]._id.toString()) {
+					var aMessage = {
+						id: theMatch.messages[i]._id,
+						createdAt: theMatch.messages[i].created_at,
+						createdBy: theMatch.messages[i].created_by,
+						text: theMatch.messages[i].message,
+						displayName: theMatch.users[0].username,
+						picture: theMatch.users[0].pictures[0].path
+					};
+				} else {
+					var aMessage = {
+						id: theMatch.messages[i]._id,
+						createdAt: theMatch.messages[i].created_at,
+						createdBy: theMatch.messages[i].created_by,
+						text: theMatch.messages[i].message,
+						displayName: theMatch.users[1].username,
+						picture: theMatch.users[1].pictures[0].path
+					};
+				}
+				theMessages.push(aMessage);
+			}
+			return res.json(theMessages);
+		})
+	})
+	.post(function(req, res) {
+		Match.findOneAndUpdate({
+			_id: req.params.id
+		},{
+			$push: {messages: req.body}
+		},{
+			upsert: true
+		}, function(err) {
+			if (err) {
+				console.log(err);
+				return "There was an error posting this message";
+			}
+			res.json('Created message');
+		});
+	})
 
 
 module.exports = router;

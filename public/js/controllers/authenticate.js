@@ -1,6 +1,6 @@
-var appAuth = angular.module("appAuth", ['ngMaterial', 'ngStorage']);
+var appAuth = angular.module("appAuth", ['ngStorage']);
 
-appAuth.controller('authController', function($scope, $http, $location, currentUserService, $localStorage){
+appAuth.controller('authController', function($scope, $http, $location, currentUserService, $localStorage, socket){
 
 	$scope.regHorse = {username: '', password: '', lat: '', lon: '', birthday: '', gender: '', age: ''};
 	$scope.logHorse = {username: '', password: '', lat: '', lon: ''};
@@ -18,6 +18,10 @@ appAuth.controller('authController', function($scope, $http, $location, currentU
 
 	$scope.matchPromise = currentUserService.getMatchesPromise;
 
+	$scope.disconnect = function() {
+		socket.emit('leave', {msg: 'data'});
+	};
+
 	$scope.changeForm = function(which){
 		$scope.showLogInForm = which;
 	};
@@ -27,24 +31,24 @@ appAuth.controller('authController', function($scope, $http, $location, currentU
 	  	$scope.regHorse.lon = $scope.myLon;
 
 	  	var birth = $scope.regHorse.birthday
-	  	 
+
 	  	    var today = new Date();
 	  	    var nowyear = today.getFullYear();
 	  	    var nowmonth = today.getMonth();
 	  	    var nowday = today.getDate();
-	  	 
+
 	  	    var birthyear = birth.getFullYear();
 	  	    var birthmonth = birth.getMonth();
 	  	    var birthday = birth.getDate();
-	  	 
+
 	  	    var age = nowyear - birthyear;
 	  	    var age_month = nowmonth - birthmonth;
 	  	    var age_day = nowday - birthday;
-	  	    
+
 	  	    if(age_month < 0 || (age_month == 0 && age_day <0)) {
 	  	            age = parseInt(age) -1;
 	  	        }
-	  	    
+
 	  	    if (age < 18) {
 	  	    	$scope.error_birthday = "You must be over 18 to use this app.";
 	  	    }
@@ -66,7 +70,7 @@ appAuth.controller('authController', function($scope, $http, $location, currentU
   	        		$scope.error_message = "Please register with a different username.";
   	        	});
 	  	    }
-	  	
+
   	};
 
   	$scope.logIn = function(){
@@ -76,7 +80,6 @@ appAuth.controller('authController', function($scope, $http, $location, currentU
 			if(data.state == 'success'){
 				currentUserService.setAuth(true);
 				$scope.userAuthenticated = currentUserService.getAuth;
-				console.log(data);
 				$localStorage.currUser = data.user._id;
 				$scope.scope_current_user = data.user._id;
 				$scope.logHorse = {username: '', password: '', lat: '', lon: ''};
@@ -92,7 +95,7 @@ appAuth.controller('authController', function($scope, $http, $location, currentU
   	};
 
 	//update lat and lon when log in
-	$scope.checkLocation = function(){ 
+	$scope.checkLocation = function(){
 		//check for geolocation support
 		if (navigator.geolocation) {
 
@@ -145,9 +148,9 @@ appAuth.controller('authController', function($scope, $http, $location, currentU
 			}
 		});
 	};
-		
+
 	$scope.checkLocation();
-	
-	$scope.checkSession();	
+
+	$scope.checkSession();
 
 });

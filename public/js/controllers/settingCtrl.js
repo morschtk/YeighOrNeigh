@@ -1,6 +1,6 @@
 
 var appSettings = angular.module("appSettings", ['ngMaterial', 'ngStorage', 'ngFileUpload'], function($compileProvider){
-	
+
 	$compileProvider.directive('compile', function($compile, currentUserService, $location) {
       // directive factory creates a link function
       return function(scope, element, attrs) {
@@ -36,7 +36,7 @@ var appSettings = angular.module("appSettings", ['ngMaterial', 'ngStorage', 'ngF
             // compile the new DOM and link it to the current scope.
             // NOTE: we only compile .childNodes so that
             // we don't get into infinite loop compiling ourselves
-            
+
             $compile(element.contents())(scope);
           }
         );
@@ -61,7 +61,7 @@ appSettings.controller('settingController',[ '$scope', '$mdDialog', 'Upload', '$
 	}else{
 		$scope.currUser.maxDistance = roundDist;
 	}
-	
+
 	if(currentUserService.getDesGender().length == 2){
 		$scope.currUser.desGender = 'both';
 	} else{
@@ -70,7 +70,7 @@ appSettings.controller('settingController',[ '$scope', '$mdDialog', 'Upload', '$
 	$scope.currUser.minAge = currentUserService.getMinAge();
 	$scope.currUser.maxAge = currentUserService.getMaxAge();
 	$scope.currUser.bio = currentUserService.getBio();
-	$scope.range = $scope.currUser.minAge + ' - ' + $scope.currUser.maxAge;	
+	$scope.range = $scope.currUser.minAge + ' - ' + $scope.currUser.maxAge;
 
 	$scope.horse = {};
 	$scope.horse.bio = currentUserService.getBio();
@@ -120,13 +120,10 @@ appSettings.controller('settingController',[ '$scope', '$mdDialog', 'Upload', '$
 	      		$route.reload();
 	      	});
 	      }
-	    }, function() {
-	      // If the user doesn't want to delete the picture run this code..
-	      console.log("Did Nothing");
-	    });	
+	    });
 	};
 
-	$scope.upload = function(afile, pos) { 
+	$scope.upload = function(afile, pos) {
 		$scope.pos = pos;
 
         Upload.upload({
@@ -137,17 +134,15 @@ appSettings.controller('settingController',[ '$scope', '$mdDialog', 'Upload', '$
             'pos': $scope.pos
           }
         }).then(function (resp) {
-        	console.log('Success ' + resp.config.data.file.name);
-        	console.log(resp.data);
         	currentUserService.setPics(resp.data);
-			$scope.generateImages();
+					$scope.generateImages();
         	$route.reload();
         }, function (resp) {
             console.log('Error status: ' + resp.status);
         }, function (evt) {
             var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
             console.log('progress: ' + progressPercentage + '% ' + evt.config.data.file.name);
-        });	      
+        });
     };
 
     $scope.saveBio = function(){

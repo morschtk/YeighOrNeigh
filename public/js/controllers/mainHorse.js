@@ -1,6 +1,6 @@
 var appHorse = angular.module("appHorse", ['ngMaterial', 'ngStorage']);
 
-appHorse.controller('horseController', function($scope, $mdDialog, $timeout, $http, $location, potentialService, dislikeService, likeService, currentUserService, $localStorage) {
+appHorse.controller('horseController', function($scope, $mdDialog, $timeout, $location, potentialService, dislikeService, likeService, currentUserService, $localStorage) {
   if(currentUserService.getCheck() === undefined){
   	$location.path('/');
   }else{
@@ -99,7 +99,7 @@ appHorse.controller('horseController', function($scope, $mdDialog, $timeout, $ht
   				$scope.details = false;
   				$scope.card = !$scope.card;
   			}, 300);
-	  	}		
+	  	}
 	};
 
 	$scope.like = function(ahorse){
@@ -107,23 +107,18 @@ appHorse.controller('horseController', function($scope, $mdDialog, $timeout, $ht
 			id: ahorse._id
 		};
 		likeService.update({id: $localStorage.currUser}, $scope.likedHorse, function(data){
-			console.log(data);
 			if(data.message){
 
 				var confirm = $mdDialog.confirm()
 		        	.title('You have just matched with ' + $scope.horse.name)
 		        	.ariaLabel('Matched User')
-		        	.ok('Talking to them!')
+		        	.ok('Talk to them!')
 		        	.cancel('Keep looking');
 
 			    $mdDialog.show(confirm).then(function() {
 			      // If the user wants to delete the picture run this code..
-			      console.log("confirmed");
 			      $location.path('/matches');
-			    }, function() {
-			      // If the user doesn't want to delete the picture run this code..
-			      console.log("Did Nothing");
-			    });	
+			    });
 			}
 		});
 
@@ -205,6 +200,6 @@ appHorse.controller('horseController', function($scope, $mdDialog, $timeout, $ht
 			$scope.pictures = $scope.horses[0].pictures[$scope.imagePos].path;
 		}
     };
-    
+
   };
 });

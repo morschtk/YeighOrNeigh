@@ -1,12 +1,14 @@
-var appMatch = angular.module("appMatch", ['ngMaterial', 'ngStorage']);
+var appMatch = angular.module("appMatch", ['ngStorage']);
 
-appMatch.controller('matchController', function($scope, $mdDialog, $http, $location, currentUserService, $localStorage, matchesService) {
-
+appMatch.controller('matchController', function($scope, $location, currentUserService, $localStorage, matchesService, matchedUserService) {
 	$scope.currName = currentUserService.getName;
+
 	matchesService.get({id: $localStorage.currUser}, function(data){
 		$scope.people = data.matched;
 	});
 
-
-
+	$scope.goToPerson = function(user, ev){
+		matchedUserService.setMatchId(user._match._id);
+		$location.path('/chat');
+	};
 });

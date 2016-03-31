@@ -28,7 +28,6 @@ appServices.factory('currentUserService', function($location, $timeout) {
 
     return {
         goSettings: function(where, promise){
-        console.log(where);
             switch(where){
                 case 'settings':
                     $timeout.cancel(promise);
@@ -205,6 +204,53 @@ appServices.factory('currentUserService', function($location, $timeout) {
     };
 });
 
+
+appServices.factory('matchedUserService', function() {
+  var matchedUser = '';
+  var matchId = '';
+
+  return {
+    getMatchedUser: function(){
+        return matchedUser;
+    },
+    setMatchedUser: function(value) {
+        matchedUser = value;
+    },
+    getMatchId: function(){
+        return matchId;
+    },
+    setMatchId: function(value) {
+        matchId = value;
+    }
+  }
+});
+
+// Demonstrate how to register services
+// In this case it is a simple value service.
+appServices.factory('socket', function ($rootScope) {
+  var socket = io.connect();
+  return {
+    on: function (eventName, callback) {
+      socket.on(eventName, function () {
+        var args = arguments;
+        $rootScope.$apply(function () {
+          callback.apply(socket, args);
+        });
+      });
+    },
+    emit: function (eventName, data, callback) {
+      socket.emit(eventName, data, function () {
+        var args = arguments;
+        $rootScope.$apply(function () {
+          if (callback) {
+            callback.apply(socket, args);
+          }
+        });
+      });
+    }
+  };
+});
+
 appServices.factory('potentialService',['$resource', function($resource){
     return $resource('/api/potentialHorses/:id', null,
         {
@@ -247,3 +293,9 @@ appServices.factory('matchesService',['$resource', function($resource){
     });
 }]);
 
+appServices.factory('messageService',['$resource', function($resource){
+    return $resource('/api/messages/:id', null,
+        {
+            'update': {method:'put'}
+    });
+}]);
